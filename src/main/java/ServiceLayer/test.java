@@ -1,4 +1,4 @@
-package Model;
+package ServiceLayer;
 
 public class test {
 }
