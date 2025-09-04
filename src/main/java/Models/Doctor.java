@@ -1,13 +1,13 @@
 package Models;
 
 public class Doctor {
-    private int doctorId;
+    private String doctorId;
     private String name;
     private String specialization;
     private String email;
     private String phoneNumber;
 
-    public Doctor(int doctorId, String name, String specialization, String email, String phoneNumber) {
+    public Doctor(String doctorId, String name, String specialization, String email, String phoneNumber) {
         this.doctorId = doctorId;
         this.name = name;
         this.specialization = specialization;
@@ -15,7 +15,7 @@ public class Doctor {
         this.phoneNumber = phoneNumber;
     }
 
-    public int getDoctorId() {
+    public String getDoctorId() {
         return doctorId;
     }
 

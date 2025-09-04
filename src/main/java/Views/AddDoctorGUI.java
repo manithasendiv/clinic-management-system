@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class testAdd {
+public class AddDoctorGUI {
     private JPanel BackPanel;
     private JTextField txtName;
     private JTextField txtSpecialization;
@@ -16,15 +16,15 @@ public class testAdd {
 
     DoctorController objController;
 
-    public testAdd() {
+    public AddDoctorGUI() {
         objController = new DoctorController();
-        int doctorCount = 0;
+        String doctorCount = "";
 
 
         btnAdd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int did = doctorCount + 1;
+                String did = doctorCount + 1;
                 String name = txtName.getText();
                 String specialization = txtSpecialization.getText();
                 String email = txtEmail.getText();
@@ -52,8 +52,12 @@ public class testAdd {
     public static void main(String[] args) {
         JFrame frame = new JFrame("doctor");
         frame.setSize(300,300);
-        frame.setContentPane(new testAdd().BackPanel);
+        frame.setContentPane(new AddDoctorGUI().BackPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
+    }
+
+    public JPanel getAddDoctorGUI() {
+        return BackPanel;
     }
 }

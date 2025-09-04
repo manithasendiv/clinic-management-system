@@ -20,4 +20,15 @@ public class DoctorService {
             return false;
         }
     }
+
+    public boolean updateDoctor(Doctor doctor) {
+        try{
+            String query = "UPDATE doctor SET DocName = '"+doctor.getName()+"', specialization = '"+doctor.getSpecialization()+"', email = '"+doctor.getEmail()+"', contact = '"+doctor.getPhoneNumber()+"' WHERE DocID = "+"'"+doctor.getDoctorId()+"'";
+            return singleConnection.ExecuteSQL(query);
+        }
+        catch(Exception e) {
+            System.out.println("Error in updating doctor" + e.getMessage());
+            return false;
+        }
+    }
 }
