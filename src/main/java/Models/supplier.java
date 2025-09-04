@@ -13,7 +13,7 @@ public class supplier {
 
     // Constructor
     public supplier(int SupplierID, String SupplierName, String Contact, String Products, int CreditPeriod, String BankDetails) {
-        this.SupplierID = supplierID;
+        this.SupplierID = SupplierID;
         this.SupplierName = SupplierName;
         this.Contact = Contact;
         this.Products = Products;
@@ -22,7 +22,7 @@ public class supplier {
     }
 
     // Getters and setters
-    public int getSupplierID() { return supplierID; }
+    public int getSupplierID() { return SupplierID; }
 
 
     public String getSupplierName() { return SupplierName; }

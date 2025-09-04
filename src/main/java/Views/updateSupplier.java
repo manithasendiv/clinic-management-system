@@ -1,12 +1,13 @@
 package Views;
 
 import Controllers.SupplierController;
+import Models.supplier;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-class UpdateSupplierGUI {
+public class updateSupplier {
     private JPanel BackPanel;
     private JTextField txtSupplierID;
     private JTextField txtSupplierName;
@@ -14,13 +15,11 @@ class UpdateSupplierGUI {
     private JTextField txtProducts;
     private JTextField txtCreditPeriod;
     private JTextField txtBankDetails;
-    private JButton btnAdd;
     private JButton btnUpdate;
-    private JButton btnDelete;
 
     SupplierController objController;
 
-    public UpdateSupplierGUI() {
+    public updateSupplier() {
         objController = new SupplierController();
 
         btnUpdate.addActionListener(new ActionListener() {
@@ -37,14 +36,16 @@ class UpdateSupplierGUI {
                     if (SupplierName.isEmpty() || Contact.isEmpty() || Products.isEmpty() || BankDetails.isEmpty()) {
                         JOptionPane.showMessageDialog(BackPanel, "Please fill all the fields", "Error", JOptionPane.ERROR_MESSAGE);
                     } else {
-                        if (!objController.updateSupplier(
-                                objController.addSupplier(SupplierID, SupplierName, Contact, Products, CreditPeriod, BankDetails))) {
+                        supplier updatedSupplier = objController.addSupplier(SupplierID, SupplierName, Contact, Products, CreditPeriod, BankDetails);
+
+                        if (!objController.updateSupplier(updatedSupplier)) {
                             JOptionPane.showMessageDialog(null, "Error in updating supplier");
                             return;
                         }
                         JOptionPane.showMessageDialog(null, "Supplier updated successfully!");
                     }
 
+                    // Clear fields after update
                     txtSupplierID.setText("");
                     txtSupplierName.setText("");
                     txtContact.setText("");
@@ -53,13 +54,17 @@ class UpdateSupplierGUI {
                     txtBankDetails.setText("");
 
                 } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(BackPanel, "Invalid input for ID or Credit Period", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(BackPanel, "Invalid input for SupplierID or Credit Period", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
     }
 
-    public JPanel getMainPanel() {
-        return BackPanel;
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Update Supplier");
+        frame.setSize(400, 400);
+        frame.setContentPane(new updateSupplier().BackPanel);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
     }
 }

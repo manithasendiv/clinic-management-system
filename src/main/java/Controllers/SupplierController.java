@@ -29,6 +29,6 @@ public class SupplierController {
 
     // Delete supplier
     public boolean deleteSupplier(int SupplierID) {
-        return ObjSupplierService.deletesupplier(SupplierID);
+        return ObjSupplierService.updatesupplier(ObjSupplier);
     }
 }
