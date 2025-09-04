@@ -1,27 +1,34 @@
-package controller;
+package Controllers;
 
-import Models.Supplier;
-import service.SupplierService;
-import java.util.List;
+import Models.supplier;
+import ServiceLayer.supplierservise;
 
 public class SupplierController {
-    private SupplierService supplierService = new SupplierService();
+    supplier ObjSupplier;
+    supplierservise ObjSupplierService;
 
-    public void addSupplier(int id, String name, String contact, String products, int creditPeriod, String bankDetails) {
-        Supplier supplier = new Supplier(id, name, contact, products, creditPeriod, bankDetails);
-        supplierService.addSupplier(supplier);
+    public SupplierController() {
+        ObjSupplierService = new supplierservise();
     }
 
-    public boolean deleteSupplier(int id) {
-        return supplierService.deleteSupplier(id);
+    // Create Supplier object
+    public supplier addSupplier(int SupplierID, String SupplierName, String Contact, String Products, int CreditPeriod, String BankDetails) {
+        ObjSupplier = new supplier(SupplierID, SupplierName, Contact, Products, CreditPeriod, BankDetails);
+        return ObjSupplier;
     }
 
-    public boolean updateSupplier(int id, String name, String contact, String products, int creditPeriod, String bankDetails) {
-        Supplier supplier = new Supplier(id, name, contact, products, creditPeriod, bankDetails);
-        return supplierService.updateSupplier(supplier);
+    // Add supplier to database
+    public boolean addSupplierToDataBase() {
+        return ObjSupplierService.addsupplier(ObjSupplier);
     }
 
-    public List<Supplier> getAllSuppliers() {
-        return supplierService.getAllSuppliers();
+    // Update supplier details
+    public boolean updateSupplier(supplier ObjSupplier) {
+        return ObjSupplierService.updatesupplier(ObjSupplier);
+    }
+
+    // Delete supplier
+    public boolean deleteSupplier(int SupplierID) {
+        return ObjSupplierService.deletesupplier(SupplierID);
     }
 }
