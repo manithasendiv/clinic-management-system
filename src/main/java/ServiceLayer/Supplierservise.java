@@ -1,21 +1,26 @@
 package ServiceLayer;
 
 import DatabaseLayer.DatabaseConnection;
-import Models.supplier;
+import Models.Supplier;
 
-public class supplierservise {
+public class Supplierservise {
     private DatabaseConnection singleConnection;
 
-    public supplierservise() {
+    public Supplierservise() {
         singleConnection = DatabaseConnection.getSingleInstance();
     }
 
     // Add supplier
-    public boolean addsupplier(supplier supplier) {
+    public boolean addsupplier(Supplier supplier) {
         try {
-            String query = "INSERT INTO SupplierDetails (SupplierName, Contact, Products, CreditPeriod, BankDetails) " +
-                    "VALUES('" + supplier.getSupplierName() + "','" + supplier.getContact() + "','" +
-                    supplier.getProducts() + "'," + supplier.getCreditPeriod() + ",'" + supplier.getBankDetails() + "')";
+            String query = "INSERT INTO supplier VALUES ("
+                    + supplier.getSupplierID() + ", '"
+                    + supplier.getSupplierName() + "', '"
+                    + supplier.getContact() + "', '"
+                    + supplier.getProducts() + "', "
+                    + supplier.getCreditPeriod() + ", '"
+                    + supplier.getBankDetails() + "')";
+
             return singleConnection.ExecuteSQL(query);
         } catch (Exception e) {
             System.out.println("Error in adding supplier " + e.getMessage());
@@ -24,9 +29,9 @@ public class supplierservise {
     }
 
     // Update supplier
-    public boolean updatesupplier(supplier supplier) {
+    public boolean updatesupplier(Supplier supplier) {
         try {
-            String query = "UPDATE SupplierDetails SET SupplierName = '" + supplier.getSupplierName() +
+            String query = "UPDATE supplier SET SupplierName = '" + supplier.getSupplierName() +
                     "', Contact = '" + supplier.getContact() +
                     "', Products = '" + supplier.getProducts() +
                     "', CreditPeriod = " + supplier.getCreditPeriod() +

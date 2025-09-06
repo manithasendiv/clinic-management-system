@@ -3,7 +3,7 @@ package Models;
 
 
 
-public class supplier {
+public class Supplier {
     private int SupplierID;
     private String SupplierName;
     private String Contact;
@@ -12,7 +12,7 @@ public class supplier {
     private String BankDetails;
 
     // Constructor
-    public supplier(int SupplierID, String SupplierName, String Contact, String Products, int CreditPeriod, String BankDetails) {
+    public Supplier(int SupplierID, String SupplierName, String Contact, String Products, int CreditPeriod, String BankDetails) {
         this.SupplierID = SupplierID;
         this.SupplierName = SupplierName;
         this.Contact = Contact;

@@ -1,43 +1,44 @@
 package Views;
 
 import Controllers.SupplierController;
-import Models.supplier;
+import Models.Supplier;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class AddSupplier {
-    private JPanel BackPanel;
-    private JTextField txtSupplierID;
-    private JTextField txtSupplierName;
-    private JTextField txtContact;
-    private JTextField txtProducts;
-    private JTextField txtCreditPeriod;
     private JPanel Backpanel;
-    private JTextField txtBankDetails;
-    private JButton btnAdd;
+    private JPanel panel;
+    private JTextField txtsupplierID;
+    private JTextField name;
+    private JTextField contact;
+    private JTextField product;
+    private JTextField creditpoints;
+    private JTextField bankdetails;
+    private JButton addSupplierButton;
+
 
     SupplierController objController;
-
-    public void AddSupplier() {
+    Supplier newSupplier;
+    public AddSupplier() {
         objController = new SupplierController();
 
-        btnAdd.addActionListener(new ActionListener() {
+        addSupplierButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    int SupplierID = Integer.parseInt(txtSupplierID.getText());
-                    String SupplierName = AddSupplier.this.txtSupplierName.getText();
-                    String Contact = txtContact.getText();
-                    String Products = txtProducts.getText();
-                    int CreditPeriod = Integer.parseInt(txtCreditPeriod.getText());
-                    String BankDetails = txtBankDetails.getText();
+                    int SupplierID = Integer.parseInt(txtsupplierID.getText());
+                    String SupplierName = name.getText();
+                    String Contact = contact.getText();
+                    String Products = product.getText();
+                    int CreditPeriod = Integer.parseInt(creditpoints.getText());
+                    String BankDetails = bankdetails.getText();
 
                     if (SupplierName.isEmpty() || Contact.isEmpty() || Products.isEmpty() || BankDetails.isEmpty()) {
-                        JOptionPane.showMessageDialog(BackPanel, "Please fill all the fields", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(panel, "Please fill all the fields", "Error", JOptionPane.ERROR_MESSAGE);
                     } else {
-                        supplier newSupplier = objController.addSupplier(SupplierID, SupplierName, Contact, Products, CreditPeriod, BankDetails);
+                        newSupplier = objController.addSupplier(SupplierID, SupplierName, Contact, Products, CreditPeriod, BankDetails);
 
                         if (!objController.addSupplierToDataBase()) {
                             JOptionPane.showMessageDialog(null, "Error in adding supplier");
@@ -47,15 +48,15 @@ public class AddSupplier {
                     }
 
                     // Clear fields after add
-                    txtSupplierID.setText("");
-                    AddSupplier.this.txtSupplierName.setText("");
-                    txtContact.setText("");
-                    txtProducts.setText("");
-                    txtCreditPeriod.setText("");
-                    txtBankDetails.setText("");
+                    txtsupplierID.setText("");
+                    AddSupplier.this.name.setText("");
+                    contact.setText("");
+                    product.setText("");
+                    creditpoints.setText("");
+                    bankdetails.setText("");
 
                 } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(BackPanel, "Invalid input for SupplierID or Credit Period", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(panel, "Invalid input for SupplierID or Credit Period", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -64,7 +65,7 @@ public class AddSupplier {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Add Supplier");
         frame.setSize(400, 400);
-        frame.setContentPane(new AddSupplier().BackPanel);
+        frame.setContentPane(new AddSupplier().panel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
