@@ -5,7 +5,7 @@ import java.sql.*;
 public class DatabaseConnection {
     private final String URL = "jdbc:mysql://localhost:3306/clinic-management-system";
     private final String username = "root";
-    private final String password = "";
+    private final String password = "mysql";
 
     private static DatabaseConnection instance;
     private Connection connection;
@@ -84,6 +84,16 @@ public class DatabaseConnection {
             }
         } catch (SQLException e) {
             System.out.println("Failed to close connection: " + e.getMessage());
+        }
+    }
+    // New method for SELECT queries to retrieve data
+    public ResultSet executeSelectQuery(String sqlQ) {
+        try {
+            Statement st = connection.createStatement();
+            return st.executeQuery(sqlQ); // Returns the result set
+        } catch (SQLException ex) {
+            System.out.println("SQL Error: " + ex.getMessage());
+            return null;
         }
     }
 }

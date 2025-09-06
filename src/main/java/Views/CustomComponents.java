@@ -1,16 +1,13 @@
 package Views;
 
+import Models.Patient;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
 
 
 public class CustomComponents {
@@ -103,7 +100,7 @@ public class CustomComponents {
 
     static public class CustomTableServiceUI extends JTable{
 
-            public CustomTableServiceUI(Object[][] data, String[] headers){
+            public CustomTableServiceUI(Object[][]data, String[] headers){
                 super(new javax.swing.table.DefaultTableModel(data, headers));
                 setRowHeight(50);
                 setFillsViewportHeight(true);
@@ -117,6 +114,10 @@ public class CustomComponents {
                 setAutoCreateRowSorter(true);
             }
 
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false; // Prevent editing
+        }
         @Override
         public javax.swing.table.TableCellRenderer getCellRenderer(int row, int column) {
             return (table, value, isSelected, hasFocus, r, c) -> {

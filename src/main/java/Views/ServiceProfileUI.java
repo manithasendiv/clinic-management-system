@@ -1,11 +1,19 @@
 package Views;
 
+import Controllers.ServiceController;
+import Models.Patient;
+import Models.Service;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class ServiceProfileUI {
-    private JPanel BackPanel;
+    JPanel BackPanel;
     private JScrollPane ScrollPane1;
     private JButton addButton;
     private JTextArea textAreaNotes;
@@ -27,16 +35,40 @@ public class ServiceProfileUI {
     private JPanel servicesPanel;
     private JList serviceList;
     private JButton addServiceBTN;
-
-    ServiceProfileUI(){
-        setProfilePanel();
-        setGeneralInformationPanel();
+    Service service;
+    ServiceController serviceController;
+    ServiceProfileUI(Patient patient){
+        serviceController = new ServiceController();
+        setProfilePanel(patient);
+        setGeneralInformationPanel(patient);
         setNotePanel();
         setFileList();
         setServicesPanel();
+        int serviceID = patient.getPatientID();
+
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try{
+                    String note = textAreaNotes.getText();
+                    if(note.isEmpty()){
+                        JOptionPane.showMessageDialog(BackPanel,"Please Write Note","Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    service = serviceController.addNote(serviceID,note);
+                    if(serviceController.addNoteToDatabase()){
+                        JOptionPane.showMessageDialog(BackPanel, "Note added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    }else{
+                        JOptionPane.showMessageDialog(BackPanel,"UNDEFINED","Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
     }
 
-    public void setProfilePanel(){
+    public void setProfilePanel(Patient patient){
         profiledetailpanel.setPreferredSize(new Dimension(150, 150));
         profiledetailpanel.setMinimumSize(new Dimension(150, 150));
         profiledetailpanel.setMaximumSize(new Dimension(150, 150));
@@ -50,10 +82,10 @@ public class ServiceProfileUI {
         ImageCenterRounded.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 
-        lblName.setText("Isum Hansana");
+        lblName.setText(patient.getName());
         lblName.setFont(new Font("Arial", Font.BOLD, 14));
         lblName.setAlignmentX(Component.CENTER_ALIGNMENT);
-        lblgmail.setText("isum@gmail.com");
+        lblgmail.setText(patient.getPhoneNumber());
         lblgmail.setFont(new Font("Arial", Font.PLAIN, 12));
         lblgmail.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -66,16 +98,16 @@ public class ServiceProfileUI {
 
     }
 
-    public void setGeneralInformationPanel(){
+    public void setGeneralInformationPanel(Patient patient){
         generalInformationPanel.setPreferredSize(new Dimension(300, 150));
         generalInformationPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
         generalInformationPanel.setBackground(new Color(220, 220, 220));
-        lblgender.setText("Male");
-        lblPhone.setText("071-892-1130");
-        lblRegDate.setText("2015-11-10");
-        lblillness.setText("Virus");
-        lblAllergies.setText("Rice");
-        lblblood.setText("O+");
+        lblgender.setText(patient.getGender());
+        lblPhone.setText(patient.getPhoneNumber());
+        lblRegDate.setText(patient.getRegDate());
+        lblillness.setText(patient.getIllness());
+        lblAllergies.setText(patient.getAllergies());
+        lblblood.setText(patient.getBloodType());
     }
 
     public void setNotePanel(){
@@ -98,7 +130,7 @@ public class ServiceProfileUI {
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Service Profile");
-        frame.setContentPane(new ServiceProfileUI().BackPanel);
+       // frame.setContentPane(new ServiceProfileUI().BackPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);

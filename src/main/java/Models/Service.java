@@ -5,16 +5,20 @@ import java.io.File;
 public class Service {
     private int serviceID;
     private String serviceName;
-    private String status;
     private Doctor doctor;
     private String checkedTime;
     private String specialNotes;
     private File file;
 
-    public Service(int serviceID, String serviceName, String status, Doctor doctor, String checkedTime, String specialNotes, File file) {
+
+    public Service(String specialNotes, int serviceID) {
+        this.specialNotes = specialNotes;
+        this.serviceID = serviceID;
+    }
+
+    public Service(int serviceID, String serviceName, Doctor doctor, String checkedTime, String specialNotes, File file) {
         this.serviceID = serviceID;
         this.serviceName = serviceName;
-        this.status = status;
         this.doctor = doctor;
         this.checkedTime = checkedTime;
         this.specialNotes = specialNotes;
@@ -37,13 +41,6 @@ public class Service {
         this.serviceName = serviceName;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 
     public Doctor getDoctor() {
         return doctor;
