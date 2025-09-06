@@ -8,10 +8,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
 
 
 public class CustomComponents {
+
     static class CustomButton extends JButton {
 
         private Color targetColor;
@@ -100,7 +103,43 @@ public class CustomComponents {
 
     static public class CustomTableServiceUI extends JTable{
 
+            public CustomTableServiceUI(Object[][] data, String[] headers){
+                super(new javax.swing.table.DefaultTableModel(data, headers));
+                setRowHeight(50);
+                setFillsViewportHeight(true);
 
+                //setSelectionBackground(new java.awt.Color(51, 78, 172)); blue color hover
+                setSelectionBackground(new java.awt.Color(24, 27, 30));
+                setSelectionForeground(new java.awt.Color(255, 255, 255, 255));
+                setShowVerticalLines(false);
+                setShowHorizontalLines(true);
+                setIntercellSpacing(new java.awt.Dimension(0, 0));
+                setAutoCreateRowSorter(true);
+            }
+
+        @Override
+        public javax.swing.table.TableCellRenderer getCellRenderer(int row, int column) {
+            return (table, value, isSelected, hasFocus, r, c) -> {
+                JLabel label = new JLabel(value == null ? "" : value.toString());
+                label.setOpaque(true);
+
+                // Background (striped rows)
+                if (isSelected) {
+                    label.setBackground(table.getSelectionBackground());
+                    label.setForeground(table.getSelectionForeground());
+                } else {
+                    label.setBackground(r % 2 == 0 ? Color.WHITE : new Color(245, 245, 245));
+                    label.setForeground(Color.BLACK);
+                }
+
+                // Add bottom border (stroke line)
+                label.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(200, 200, 200)));
+
+                // Center alignment
+                label.setHorizontalAlignment(JLabel.CENTER);
+                return label;
+            };
+        }
 
 
 
