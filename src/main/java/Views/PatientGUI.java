@@ -18,6 +18,7 @@ public class PatientGUI {
     private JLabel lblAddress;
     private JLabel lblContact;
     private JLabel lblEmail;
+    private JPanel BackPanel;
 
     PatientController objController;
 
@@ -34,7 +35,37 @@ public class PatientGUI {
                 String Address = txtAddress.getText();
                 int Contact = Integer.parseInt(txtContact.getText());
                 String Email = txtEmail.getText();
+
+                if (Name.isEmpty() || txtAge.getText().isEmpty() || Address.isEmpty() || txtContact.getText().isEmpty() || Email.isEmpty()){
+                    JOptionPane.showMessageDialog(BackPanel, "Please fill all the fields", "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    objController.addPatient(patientID,Name,Age,Address,Contact,Email);
+
+                    if (!objController.addPatientToDataBase()) {
+                        JOptionPane.showMessageDialog(null, "Error in adding patient");
+                        return;
+                    }
+                    JOptionPane.showMessageDialog(null, "Patient added successfully!");
+                }
+                txtName.setText("");
+                txtAddress.setText("");
+                txtEmail.setText("");
+                txtContact.setText("");
             }
+
         });
     }
+
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("doctor");
+        frame.setSize(300,300);
+        frame.setContentPane(new PatientGUI().BackPanel);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+
+public JPanel getPatientGUI() {
+    return BackPanel;
 }
+    }
+
