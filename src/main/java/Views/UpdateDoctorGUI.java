@@ -54,4 +54,8 @@ public class UpdateDoctorGUI {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
+
+    public JPanel getUpdateDoctorGUI() {
+        return BackPanel;
+    }
 }

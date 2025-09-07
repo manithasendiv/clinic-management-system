@@ -33,8 +33,8 @@ public class DashboardUI {
 //        patientsButton.addActionListener(new ActionListener() {
 //            @Override
 //            public void actionPerformed(ActionEvent e) {
-//                PatientUI patientUI = new PatientUI();
-//                ViewPanel.add(patientUI.getPatientUI(), "patientUI");
+//                UpdateDoctorGUI addDoctorGUI = new UpdateDoctorGUI();
+//                ViewPanel.add(addDoctorGUI.getUpdateDoctorGUI(), "patientUI");
 //                cardLayout.show(ViewPanel, "patientUI");
 //            }
 //        });
@@ -42,7 +42,7 @@ public class DashboardUI {
 //        doctorScheduleButton.addActionListener(new ActionListener() {
 //            @Override
 //            public void actionPerformed(ActionEvent e) {
-////                ViewPanel.removeAll();
+//                ViewPanel.removeAll();
 //                DoctorScheduleUI doctorScheduleUI = new DoctorScheduleUI();
 //                ViewPanel.add(doctorScheduleUI.getDoctorScheduleUI(), "doctorScheduleUI");
 //                cardLayout.show(ViewPanel, "doctorScheduleUI");
