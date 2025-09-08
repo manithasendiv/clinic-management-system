@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
+import java.util.Stack;
 
 public class ServiceProfileUI {
     JPanel BackPanel;
@@ -34,16 +36,19 @@ public class ServiceProfileUI {
     private JPanel filesPanel;
     private JPanel servicesPanel;
     private JList serviceList;
-    private JButton addServiceBTN;
+    JButton addServiceBTN;
+    JScrollPane servicescroll;
     Service service;
     ServiceController serviceController;
+
+
     ServiceProfileUI(Patient patient){
         serviceController = new ServiceController();
         setProfilePanel(patient);
         setGeneralInformationPanel(patient);
         setNotePanel();
         setFileList();
-        setServicesPanel();
+        setServicesPanel(patient);
         int serviceID = patient.getPatientID();
 
         addButton.addActionListener(new ActionListener() {
@@ -76,7 +81,8 @@ public class ServiceProfileUI {
         profiledetailpanel.setBackground(new Color(220, 220, 220));
         profiledetailpanel.setLayout(new BoxLayout(this.profiledetailpanel, BoxLayout.Y_AXIS));
 
-        ImageIcon imageIcon = new ImageIcon("C:\\Users\\isum\\OneDrive\\Desktop\\Y02 Sem02\\PPA\\ServiceManagementSystem\\clinic-management-system\\src\\main\\java\\Views\\account_circle_45dp_000000_FILL0_wght400_GRAD0_opsz48.png");
+        ImageIcon imageIcon = new ImageIcon("C:\\Users\\isum\\OneDrive\\Desktop\\Y02 Sem02\\PPA\\ServiceManagementSystem\\" +
+                "clinic-management-system\\src\\main\\java\\Views\\account_circle_45dp_000000_FILL0_wght400_GRAD0_opsz48.png");
         ImageCenterRounded = new JLabel(imageIcon);
         ImageCenterRounded.setPreferredSize(new Dimension(60,60));
         ImageCenterRounded.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -122,10 +128,20 @@ public class ServiceProfileUI {
         filesPanel.setBackground(new Color(220, 220, 220));
     }
 
-    public void setServicesPanel(){
+    public void setServicesPanel(Patient patient){
+        Stack<Service> servicelistStack = serviceController.service.getService(patient.getPatientID());
+        if(servicelistStack == null){return;}
+
+        DefaultListModel<String> listModel = new DefaultListModel<>();
+        for (Service s : servicelistStack) {
+            listModel.addElement(s.getCheckedTime() + " - " + s.getServiceName() + " (" + s.getDoctor() + ")");
+        }
+        serviceList = new JList<>(listModel);
         servicesPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         servicesPanel.setBackground(new Color(220, 220, 220));
-
+        servicescroll.setViewportView(serviceList);
+        servicescroll.revalidate();
+        servicescroll.repaint();
     }
 
     public static void main(String[] args) {

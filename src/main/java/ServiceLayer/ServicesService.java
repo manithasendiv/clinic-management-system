@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class ServicesService {
     private DatabaseConnection singleConn;
@@ -30,40 +31,13 @@ public class ServicesService {
         }
         return patientList;
     }
-    public List<Patient> getPatientsOnSearch(String searchText) {
-        List<Patient> patientList = new ArrayList<>();
-        try {
-            String query = "SELECT * FROM patient " +
-                    "WHERE Name LIKE ? OR PhoneNumber LIKE ? OR CAST(PatientID AS CHAR) LIKE ?";
-
-            PreparedStatement stmt = singleConn.getConnection().prepareStatement(query);
-            stmt.setString(1, "%" + searchText + "%");
-            stmt.setString(2, "%" + searchText + "%");
-            stmt.setString(3, "%" + searchText + "%");
-
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                Patient patient = new Patient(
-                        rs.getInt("PatientID"),
-                        rs.getString("Name"),
-                        rs.getInt("Age"),
-                        rs.getString("PhoneNumber")
-                );
-                patientList.add(patient);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return patientList;
-    }
 
 
    public Patient getPatientDetails(int PatientID){
         Patient patient = null;
         ResultSet rs = null;
         try{
-            String query2 = "SELECT * FROM patient JOIN description ON patient.PatientID = description.PatientID WHERE patient.PatientID =?";
+           String query2 = "SELECT * FROM patient JOIN description ON patient.PatientID = description.PatientID WHERE patient.PatientID =?";
             singleConn.setPreparedStatement(query2);
             singleConn.preparedStatement.setInt(1, PatientID);
              rs = singleConn.ExecutePreparedStatement();
@@ -72,8 +46,8 @@ public class ServicesService {
                             PatientID,
                             rs.getString("Name"),
                             rs.getInt("Age"),
-                            rs.getString("PhoneNumber"),
-                            rs.getString("Gender"),
+                           rs.getString("PhoneNumber"),
+                           rs.getString("Gender"),
                             rs.getString("RegDate"),
                             rs.getString("Illness"),
                             rs.getString("BloodType"),
@@ -81,19 +55,19 @@ public class ServicesService {
                     );
                 }
 
-        }catch (Exception ex){
-            System.out.println("Cannot Receive Patient Details");
+       }catch (Exception ex){
+           System.out.println("Cannot Receive Patient Details");
         }finally {
             // Close the result set if needed
             if (rs != null) {
                 try {
                     rs.close();
-                } catch (SQLException e) {
+               } catch (SQLException e) {
                     System.err.println("Error closing result set: " + e.getMessage());
                 }
-            }
+           }
         }
-       return patient;
+      return patient;
    }
 
 
@@ -110,6 +84,35 @@ public class ServicesService {
         }
     }
 
+    public boolean AddFile(Service service){
+        try{
+            return true;
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Stack<Service> getService(int id){
+        Stack<Service> serviceStack = new Stack<>();
+        try{
+            String query = "select TimeStamp,DoctorName,Name from service where PatientID='"+id+"' order by TimeStamp DESC";
+            ResultSet resultSet = singleConn.executeSelectQuery(query);
+            while (resultSet.next()) {
+                serviceStack.push(
+                        new Service(
+                                id,
+                                resultSet.getString("Name"),
+                                resultSet.getString("DoctorName"),
+                                resultSet.getString("TimeStamp")
+                        )
+                );
+            }
+            return serviceStack;
+        } catch (RuntimeException | SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
 
 
 }

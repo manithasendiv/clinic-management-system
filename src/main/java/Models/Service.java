@@ -5,24 +5,26 @@ import java.io.File;
 public class Service {
     private int serviceID;
     private String serviceName;
-    private Doctor doctor;
+    private String doctor;
     private String checkedTime;
     private String specialNotes;
     private File file;
 
+    public Service(File file, int serviceID) {
+        this.file = file;
+        this.serviceID = serviceID;
+    }
 
     public Service(String specialNotes, int serviceID) {
         this.specialNotes = specialNotes;
         this.serviceID = serviceID;
     }
 
-    public Service(int serviceID, String serviceName, Doctor doctor, String checkedTime, String specialNotes, File file) {
+    public Service(int serviceID, String serviceName, String doctor, String checkedTime) {
         this.serviceID = serviceID;
         this.serviceName = serviceName;
         this.doctor = doctor;
         this.checkedTime = checkedTime;
-        this.specialNotes = specialNotes;
-        this.file = file;
     }
 
     public int getServiceID() {
@@ -42,11 +44,11 @@ public class Service {
     }
 
 
-    public Doctor getDoctor() {
+    public String getDoctor() {
         return doctor;
     }
 
-    public void setDoctor(Doctor doctor) {
+    public void setDoctor(String doctor) {
         this.doctor = doctor;
     }
 

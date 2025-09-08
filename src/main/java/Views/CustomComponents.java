@@ -1,8 +1,9 @@
 package Views;
 
-import Models.Patient;
+
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -104,45 +105,38 @@ public class CustomComponents {
                 super(new javax.swing.table.DefaultTableModel(data, headers));
                 setRowHeight(50);
                 setFillsViewportHeight(true);
-
+                setDefaultRenderer(Object.class, new CustomCellRenderer());
                 //setSelectionBackground(new java.awt.Color(51, 78, 172)); blue color hover
                 setSelectionBackground(new java.awt.Color(24, 27, 30));
                 setSelectionForeground(new java.awt.Color(255, 255, 255, 255));
-                setShowVerticalLines(false);
-                setShowHorizontalLines(true);
                 setIntercellSpacing(new java.awt.Dimension(0, 0));
                 setAutoCreateRowSorter(true);
+
             }
 
         @Override
         public boolean isCellEditable(int row, int column) {
             return false; // Prevent editing
         }
-        @Override
-        public javax.swing.table.TableCellRenderer getCellRenderer(int row, int column) {
-            return (table, value, isSelected, hasFocus, r, c) -> {
-                JLabel label = new JLabel(value == null ? "" : value.toString());
-                label.setOpaque(true);
 
-                // Background (striped rows)
+        static class CustomCellRenderer extends DefaultTableCellRenderer {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                                                           boolean isSelected, boolean hasFocus, int row, int column) {
+                super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
                 if (isSelected) {
-                    label.setBackground(table.getSelectionBackground());
-                    label.setForeground(table.getSelectionForeground());
+                    setBackground(table.getSelectionBackground());
+                    setForeground(table.getSelectionForeground());
                 } else {
-                    label.setBackground(r % 2 == 0 ? Color.WHITE : new Color(245, 245, 245));
-                    label.setForeground(Color.BLACK);
+                    setBackground(row % 2 == 0 ? Color.WHITE : new Color(245, 245, 245));
+                    setForeground(Color.BLACK);
                 }
 
-                // Add bottom border (stroke line)
-                label.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(200, 200, 200)));
-
-                // Center alignment
-                label.setHorizontalAlignment(JLabel.CENTER);
-                return label;
-            };
+                setHorizontalAlignment(CENTER);
+                setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(200, 200, 200)));
+                return this;
+            }
         }
-
-
-
     }
 }
