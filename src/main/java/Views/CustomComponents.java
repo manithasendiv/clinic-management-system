@@ -190,11 +190,17 @@ public class CustomComponents {
 
     static class RoundedPanel extends JPanel {
         private int cornerRadius;
+        private Color borderColor = Color.BLACK; // default
 
         public RoundedPanel(int radius) {
             super();
             this.cornerRadius = radius;
-            setOpaque(false); // important for transparency
+            setOpaque(false);
+        }
+
+        public void setBorderColor(Color color) {
+            this.borderColor = color;
+            repaint();
         }
 
         @Override
@@ -204,13 +210,18 @@ public class CustomComponents {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
+            // background
             g2.setColor(getBackground());
             g2.fillRoundRect(0, 0, getWidth()-1, getHeight()-1, arcs.width, arcs.height);
-            g2.setColor(getForeground());
+
+            // border
+            g2.setColor(borderColor);
             g2.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, arcs.width, arcs.height);
+
             g2.dispose();
         }
     }
+
 
     static class CustomTextArea extends JTextArea {
         public CustomTextArea(int rows, int columns) {

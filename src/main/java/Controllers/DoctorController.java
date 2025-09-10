@@ -4,6 +4,8 @@ package Controllers;
 import Models.Doctor;
 import ServiceLayer.DoctorService;
 
+import java.sql.ResultSet;
+
 public class DoctorController {
     Doctor ObjDoctor;
     DoctorService ObjDoctorService;
@@ -23,5 +25,9 @@ public class DoctorController {
 
     public boolean updateDoctor(Doctor doctor) {
         return ObjDoctorService.updateDoctor(doctor);
+    }
+
+    public ResultSet getAllDoctors() {
+        return ObjDoctorService.getAllDoctors();
     }
 }

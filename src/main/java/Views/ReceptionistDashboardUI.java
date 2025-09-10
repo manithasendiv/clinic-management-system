@@ -2,10 +2,8 @@ package Views;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class DashboardUI {
+public class ReceptionistDashboardUI {
     private JButton patientsButton;
     private JButton doctorScheduleButton;
     private JButton newAppointmentButton;
@@ -19,7 +17,7 @@ public class DashboardUI {
     private JButton reportsButton;
     private JPanel LogoPanel;
 
-    public DashboardUI() {
+    public ReceptionistDashboardUI() {
         CardLayout cardLayout = new CardLayout();
         ViewPanel.setLayout(cardLayout);
 
@@ -81,7 +79,7 @@ public class DashboardUI {
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("CDC");
-        frame.setContentPane(new DashboardUI().BackPanel);
+        frame.setContentPane(new ReceptionistDashboardUI().BackPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 550);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -128,13 +126,13 @@ public class DashboardUI {
         patientsButton.setMinimumSize(new Dimension(50, 45));
 
         doctorScheduleButton = new CustomComponents.CustomButton("Doctor Schedule");
-        doctorScheduleButton.setMinimumSize(new Dimension(0, 45));
+        doctorScheduleButton.setMinimumSize(new Dimension(50, 45));
 
         newAppointmentButton = new CustomComponents.CustomButton("New Appointment");
         reportsButton = new CustomComponents.CustomButton("Reports");
 
-        reportsButton.setMinimumSize(new Dimension(0, 45));
-        newAppointmentButton.setMinimumSize(new Dimension(0, 45));
+        reportsButton.setMinimumSize(new Dimension(50, 45));
+        newAppointmentButton.setMinimumSize(new Dimension(50, 45));
 
         signoutButton = new CustomComponents.CustomButton("Sign Out");
         signoutButton.setMinimumSize(new Dimension(0, 40));

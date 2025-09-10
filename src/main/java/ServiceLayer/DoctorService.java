@@ -3,6 +3,8 @@ package ServiceLayer;
 import DatabaseLayer.DatabaseConnection;
 import Models.Doctor;
 
+import java.sql.ResultSet;
+
 public class DoctorService {
     private DatabaseConnection singleConnection;
 
@@ -29,6 +31,18 @@ public class DoctorService {
         catch(Exception e) {
             System.out.println("Error in updating doctor" + e.getMessage());
             return false;
+        }
+    }
+
+    public ResultSet getAllDoctors() {
+        try {
+            String query = "SELECT * FROM doctor";
+            singleConnection.setPreparedStatement(query);
+            return singleConnection.ExecutePreparedStatement();
+
+        } catch (Exception e) {
+            System.out.println("Error in getting all doctors: " + e.getMessage());
+            return null;
         }
     }
 }

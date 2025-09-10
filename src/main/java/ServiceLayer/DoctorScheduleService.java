@@ -15,7 +15,7 @@ public class DoctorScheduleService {
 
     public boolean addDoctorSchedule(DoctorSchedule doctorSchedule) {
         try{
-            String query = "INSERT INTO doctor_schedule(scheduleID,doctorId, day, time) VALUES(" + doctorSchedule.getDoctor().getDoctorId() + ",'" + doctorSchedule.getDay() + "','" + doctorSchedule.getTime() + "')";
+            String query = "INSERT INTO schedules(doctorName, availableDate, availableTime) VALUES("+ "'" +doctorSchedule.getDoctor().getName()+ "'" + ",'" + doctorSchedule.getDay() + "','" + doctorSchedule.getTime() + "')";
             return singleConnection.ExecuteSQL(query);
         }
         catch(Exception e) {

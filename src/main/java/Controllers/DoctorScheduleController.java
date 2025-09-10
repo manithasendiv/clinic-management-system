@@ -15,7 +15,7 @@ public class DoctorScheduleController {
         ObjDoctorScheduleService = new DoctorScheduleService();
     }
 
-    public void addDoctorSchedule(int scheduleID, Doctor doctor, String name, String specialization, String day, String time) {
+    public void addDoctorSchedule(int scheduleID, Doctor doctor, String day, String time) {
         ObjDoctorSchedule = new DoctorSchedule(scheduleID, doctor, day, time);
     }
 
