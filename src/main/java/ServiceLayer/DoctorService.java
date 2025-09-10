@@ -45,4 +45,16 @@ public class DoctorService {
             return null;
         }
     }
+
+    public ResultSet getDoctorByName(String name) {
+        try {
+            String query = "SELECT * FROM doctor WHERE DocName = '" + name + "'";
+            singleConnection.setPreparedStatement(query);
+            return singleConnection.ExecutePreparedStatement();
+
+        } catch (Exception e) {
+            System.out.println("Error in getting doctor by name: " + e.getMessage());
+            return null;
+        }
+    }
 }

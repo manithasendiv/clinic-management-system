@@ -27,6 +27,10 @@ public class DoctorController {
         return ObjDoctorService.updateDoctor(doctor);
     }
 
+    public ResultSet searchDoctorByName(String name) {
+        return ObjDoctorService.getDoctorByName(name);
+    }
+
     public ResultSet getAllDoctors() {
         return ObjDoctorService.getAllDoctors();
     }

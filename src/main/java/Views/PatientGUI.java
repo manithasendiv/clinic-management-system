@@ -1,10 +1,15 @@
 package Views;
 
+import Controllers.DoctorScheduleController;
 import Controllers.PatientController;
+import Models.DoctorSchedule;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PatientGUI {
     private JTextField txtName;
@@ -29,10 +34,30 @@ public class PatientGUI {
     private JLabel lblTime;
 
     PatientController objController;
+    DoctorScheduleController objDoctorScheduleController;
 
     public PatientGUI(){
         objController = new PatientController();
+        objDoctorScheduleController = new DoctorScheduleController();
         int patientCount = 0;
+
+        try{
+            ResultSet resultSet = objDoctorScheduleController.getAllSchedule();
+            while (resultSet.next()){
+                String docName = resultSet.getString("doctorName");
+                comboBox1.addItem(docName);
+            }
+
+            if(resultSet != null){
+                JOptionPane.showMessageDialog(null, "No doctor schedules currently available");
+            }
+        }
+        catch (Exception e){
+            JOptionPane.showMessageDialog(null, "Error in fetching doctor schedule list");
+        }
+
+
+
 
         btnAddPatient.addActionListener(new ActionListener() {
             @Override
