@@ -19,4 +19,8 @@ public class PatientController {
     public boolean addPatientToDataBase() {
         return ObjPatientService.addPatient(ObjPatient);
     }
+
+    public boolean updatePatient(Patient patient){
+        return ObjPatientService.updatePatient(patient);
+    }
 }

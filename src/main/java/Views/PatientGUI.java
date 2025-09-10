@@ -19,6 +19,14 @@ public class PatientGUI {
     private JLabel lblContact;
     private JLabel lblEmail;
     private JPanel BackPanel;
+    private JComboBox comboBox1;
+    private JTextField textField1;
+    private JTextField textField2;
+    private JButton btnUpdate;
+    private JButton btnDelete;
+    private JLabel lblDoctor;
+    private JLabel lblDate;
+    private JLabel lblTime;
 
     PatientController objController;
 

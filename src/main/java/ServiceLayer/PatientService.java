@@ -20,4 +20,22 @@ public class PatientService {
             return false;
         }
     }
+
+    public boolean updatePatient(Patient patient) {
+        try {
+            String query = "UPDATE patient SET " +
+                    "Name='" + patient.getName() + "', " +
+                    "Age='" + patient.getAge() + "', " +
+                    "Address='" + patient.getAddress() + "', " +
+                    "Contact='" + patient.getContact() + "', " +
+                    "Email='" + patient.getEmail() + "' " +
+                    "WHERE PatientID=" + patient.getPatientID();
+
+            return singleConnection.ExecuteSQL(query);
+        } catch (Exception e) {
+            System.out.println("Error in updating patient: " + e.getMessage());
+            return false;
+        }
+    }
+
 }
