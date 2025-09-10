@@ -1,13 +1,21 @@
 package Views;
 
 import Controllers.DoctorScheduleController;
+import Controllers.DoctorController;
+import Controllers.DoctorScheduleController;
 import Controllers.PatientController;
+import Models.DoctorSchedule;
+import Models.Doctor;
 import Models.DoctorSchedule;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,9 +32,9 @@ public class PatientGUI {
     private JLabel lblContact;
     private JLabel lblEmail;
     private JPanel BackPanel;
-    private JComboBox comboBox1;
-    private JTextField textField1;
-    private JTextField textField2;
+    private JComboBox doctorComboBox;
+    private JTextField txtDate;
+    private JTextField txtTime;
     private JButton btnUpdate;
     private JButton btnDelete;
     private JLabel lblDoctor;
@@ -40,6 +48,8 @@ public class PatientGUI {
         objController = new PatientController();
         objDoctorScheduleController = new DoctorScheduleController();
         int patientCount = 0;
+
+
 
         try{
             ResultSet resultSet = objDoctorScheduleController.getAllSchedule();
