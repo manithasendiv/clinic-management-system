@@ -35,4 +35,5 @@ public class DoctorScheduleController {
         return ObjDoctorScheduleService.getAllSchedule();
     }
 
+
 }

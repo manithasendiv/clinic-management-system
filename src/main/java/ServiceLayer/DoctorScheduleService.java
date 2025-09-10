@@ -27,7 +27,7 @@ public class DoctorScheduleService {
 
     public ResultSet getAllSchedule() {
         try {
-            String query = "SELECT * FROM doctor_schedule";
+            String query = "SELECT * FROM schedules";
             singleConnection.setPreparedStatement(query);
             return singleConnection.ExecutePreparedStatement();
 
