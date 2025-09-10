@@ -12,7 +12,7 @@ public class PatientService {
 
     public boolean addPatient(Patient patient) {
         try{
-            String query = "INSERT INTO patient(Name, Age, Address, Contact, Email) VALUES('"+patient.getName()+ "','"+ patient.getAge() +"','"+patient.getAddress()+"','"+patient.getContact()+"','" +patient.getEmail()+ "')";
+            String query = "INSERT INTO patient(Name, Age, Address, Contact, Email,Selected_Doctor,Date,Time) VALUES('"+patient.getName()+ "','"+ patient.getAge() +"','"+patient.getAddress()+"','"+patient.getContact()+"','" +patient.getEmail()+ "','" +patient.getSelected_Doctor()+ "','" +patient.getDate()+ "','" +patient.getTime()+ "')";
             return singleConnection.ExecuteSQL(query);
         }
         catch(Exception e) {
