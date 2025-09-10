@@ -4,6 +4,8 @@ import DatabaseLayer.DatabaseConnection;
 import Models.Patient;
 import Models.Service;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -83,36 +85,73 @@ public class ServicesService {
             return false;
         }
     }
+    /*
+    public boolean AddFile(String fname, File file, int id) {
+        String query = "INSERT INTO documents (Name, File, PatientID) VALUES (?, ?, ?)";
+        try (PreparedStatement ps = singleConn.getConnection().prepareStatement(query);
+             FileInputStream fis = new FileInputStream(file)) {
 
-    public boolean AddFile(Service service){
-        try{
-            return true;
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
+            ps.setString(1, fname);         // File name (string)
+            ps.setBinaryStream(2, fis, (int) file.length()); // File content (binary)
+            ps.setInt(3, id);               // Patient ID
+
+            int rows = ps.executeUpdate();
+            return rows > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
-    }
+    }*/
 
-    public Stack<Service> getService(int id){
-        Stack<Service> serviceStack = new Stack<>();
-        try{
-            String query = "select TimeStamp,DoctorName,Name from service where PatientID='"+id+"' order by TimeStamp DESC";
+
+    public ArrayList<Service> getService(int id){
+        ArrayList<Service> serviceList = new ArrayList<>();
+        try {
+            String query = "SELECT ServiceID,TimeStamp, DoctorName, Name FROM service WHERE PatientID='" + id + "' ORDER BY TimeStamp DESC";
             ResultSet resultSet = singleConn.executeSelectQuery(query);
             while (resultSet.next()) {
-                serviceStack.push(
-                        new Service(
-                                id,
-                                resultSet.getString("Name"),
-                                resultSet.getString("DoctorName"),
-                                resultSet.getString("TimeStamp")
-                        )
-                );
+                serviceList.add(new Service(
+                        resultSet.getInt("ServiceID"),
+                        resultSet.getString("Name"),
+                        resultSet.getString("DoctorName"),
+                        resultSet.getString("TimeStamp")
+                ));
             }
-            return serviceStack;
+            return serviceList;
         } catch (RuntimeException | SQLException e) {
             System.out.println(e.getMessage());
             return null;
         }
     }
 
+
+
+
+    public boolean addService(Service service){
+        try{
+            String query = "INSERT INTO service (Name, DoctorName, PatientID) VALUES ('"
+                    + service.getServiceName() + "', '"
+                    + service.getDoctor() + "', "
+                    + service.getPatientID() + ")";
+
+            boolean result = singleConn.ExecuteSQL(query);
+            return result;
+        }catch (Exception ex){
+            System.out.println("Cannot Insert a Service: " + ex.getMessage());
+            return false;
+        }
+    }
+
+
+    public boolean deleteService(int sid){
+        try {
+            String query = "DELETE FROM service WHERE ServiceID = " + sid;
+            return singleConn.ExecuteSQL(query);
+        } catch (Exception e) {
+            System.out.println("Error in deleting doctor schedule: " + e.getMessage());
+            return false;
+        }
+    }
 
 }

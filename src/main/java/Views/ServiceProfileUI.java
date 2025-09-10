@@ -9,9 +9,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Stack;
 
 public class ServiceProfileUI {
@@ -38,9 +36,10 @@ public class ServiceProfileUI {
     private JList serviceList;
     JButton addServiceBTN;
     JScrollPane servicescroll;
+    private JButton RemoveBTN;
     Service service;
     ServiceController serviceController;
-
+    ArrayList<Service> servicelistarray;
 
     ServiceProfileUI(Patient patient){
         serviceController = new ServiceController();
@@ -71,6 +70,36 @@ public class ServiceProfileUI {
                 }
             }
         });
+        addServiceBTN.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frame = new JFrame("AddService");
+                frame.setContentPane(new AddServiceUI(patient.getPatientID()).mainPanelAddServiceUI);
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                frame.pack();
+                frame.setVisible(true);
+                frame.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                        setServicesPanel(patient); // refresh the list
+                    }
+                });
+            }
+        });
+        RemoveBTN.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = serviceList.getSelectedIndex(); // get the selected row
+                if (selectedIndex != -1) { // make sure something is selected
+                    Service serviceToRemove = servicelistarray.get(selectedIndex); // get service object
+                    serviceController.removeService(serviceToRemove.getServiceID());
+                    System.out.println(serviceToRemove.getServiceID());
+                    DefaultListModel<String> model = (DefaultListModel<String>) serviceList.getModel();
+                    model.remove(selectedIndex);
+                }
+            }
+        });
+
     }
 
     public void setProfilePanel(Patient patient){
@@ -129,20 +158,43 @@ public class ServiceProfileUI {
     }
 
     public void setServicesPanel(Patient patient){
-        Stack<Service> servicelistStack = serviceController.service.getService(patient.getPatientID());
-        if(servicelistStack == null){return;}
+        servicelistarray = serviceController.service.getService(patient.getPatientID());
+        if(servicelistarray == null){ return; }
 
-        DefaultListModel<String> listModel = new DefaultListModel<>();
-        for (Service s : servicelistStack) {
-            listModel.addElement(s.getCheckedTime() + " - " + s.getServiceName() + " (" + s.getDoctor() + ")");
+        DefaultListModel<Service> listModel = new DefaultListModel<>();
+        for (Service s : servicelistarray) {
+            listModel.addElement(s); // store Service objects directly
         }
-        serviceList = new JList<>(listModel);
+        serviceList.setModel(listModel);
+
+        // Set custom cell renderer to look like cards
+        serviceList.setCellRenderer(new ListCellRenderer<Service>() {
+            @Override
+            public Component getListCellRendererComponent(JList<? extends Service> list, Service value, int index, boolean isSelected, boolean cellHasFocus) {
+                JPanel card = new JPanel(new BorderLayout());
+                card.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1, true)); // rounded border
+                card.setBackground(Color.WHITE);
+                card.setPreferredSize(new Dimension(list.getWidth() - 20, 60));
+
+                JLabel label = new JLabel(value.getCheckedTime() + " - " + value.getServiceName() + " (" + value.getDoctor() + ")");
+                label.setBorder(new EmptyBorder(10, 10, 10, 10));
+                card.add(label, BorderLayout.CENTER);
+
+                if(isSelected) {
+                    card.setBackground(new Color(200, 230, 255)); // highlight when selected
+                }
+
+                return card;
+            }
+        });
+
         servicesPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         servicesPanel.setBackground(new Color(220, 220, 220));
         servicescroll.setViewportView(serviceList);
         servicescroll.revalidate();
         servicescroll.repaint();
     }
+
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Service Profile");

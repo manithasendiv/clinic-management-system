@@ -19,12 +19,24 @@ public class ServiceController {
             serviceObj = new Service(file,serviceID);
             return serviceObj;
         }
+
+        public Service AddService(String name,String doctor,int pateintID){
+            serviceObj = new Service(name,doctor,pateintID);
+            return  serviceObj;
+        }
+
         public ServiceController(){
             service= new ServicesService();
          }
         public boolean addNoteToDatabase() {
             return service.AddNote(serviceObj);
         }
+
+        public boolean removeService(int sid) {
+        return service.deleteService(sid);
+    }
+
         //public boolean addFileToDatabase() {return  service.}
+        public  boolean addServiceToDatabase(){return  service.addService(serviceObj);}
 
 }

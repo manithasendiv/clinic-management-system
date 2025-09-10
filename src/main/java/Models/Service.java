@@ -9,6 +9,7 @@ public class Service {
     private String checkedTime;
     private String specialNotes;
     private File file;
+    private int patientID;
 
     public Service(File file, int serviceID) {
         this.file = file;
@@ -25,6 +26,16 @@ public class Service {
         this.serviceName = serviceName;
         this.doctor = doctor;
         this.checkedTime = checkedTime;
+    }
+
+    public int getPatientID() {
+        return patientID;
+    }
+
+    public Service(String doctor, String serviceName, int patientID) {
+        this.doctor = doctor;
+        this.serviceName = serviceName;
+        this.patientID = patientID;
     }
 
     public int getServiceID() {
