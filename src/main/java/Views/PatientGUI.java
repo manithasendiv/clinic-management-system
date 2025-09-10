@@ -55,10 +55,10 @@ public class PatientGUI {
             ResultSet resultSet = objDoctorScheduleController.getAllSchedule();
             while (resultSet.next()){
                 String docName = resultSet.getString("doctorName");
-                comboBox1.addItem(docName);
+                doctorComboBox.addItem(docName);
             }
 
-            if(resultSet != null){
+            if(resultSet == null){
                 JOptionPane.showMessageDialog(null, "No doctor schedules currently available");
             }
         }
@@ -78,11 +78,14 @@ public class PatientGUI {
                 String Address = txtAddress.getText();
                 int Contact = Integer.parseInt(txtContact.getText());
                 String Email = txtEmail.getText();
+                String SelectDoc = doctorComboBox.getSelectedItem().toString();
+                String Date = txtDate.getText();
+                String Time = txtTime.getText();
 
-                if (Name.isEmpty() || txtAge.getText().isEmpty() || Address.isEmpty() || txtContact.getText().isEmpty() || Email.isEmpty()){
+                if (Name.isEmpty() || txtAge.getText().isEmpty() || Address.isEmpty() || txtContact.getText().isEmpty() || Email.isEmpty() || Date.isEmpty() || Time.isEmpty() ){
                     JOptionPane.showMessageDialog(BackPanel, "Please fill all the fields", "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
-                    objController.addPatient(patientID,Name,Age,Address,Contact,Email);
+                    objController.addPatient(patientID,Name,Age,Address,Contact,Email,SelectDoc,Date,Time);
 
                     if (!objController.addPatientToDataBase()) {
                         JOptionPane.showMessageDialog(null, "Error in adding patient");
@@ -91,9 +94,15 @@ public class PatientGUI {
                     JOptionPane.showMessageDialog(null, "Patient added successfully!");
                 }
                 txtName.setText("");
+                txtAge.setText("");
                 txtAddress.setText("");
-                txtEmail.setText("");
                 txtContact.setText("");
+                txtEmail.setText("");
+                txtDate.setText("");
+                txtTime.setText("");
+
+
+
             }
 
         });
