@@ -10,7 +10,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Stack;
 
 public class ServiceProfileUI {
     JPanel BackPanel;
@@ -37,16 +36,18 @@ public class ServiceProfileUI {
     JButton addServiceBTN;
     JScrollPane servicescroll;
     private JButton RemoveBTN;
+    private JButton backBTN;
     Service service;
     ServiceController serviceController;
     ArrayList<Service> servicelistarray;
+    ArrayList<Service> documentlistarray;
 
     ServiceProfileUI(Patient patient){
         serviceController = new ServiceController();
         setProfilePanel(patient);
         setGeneralInformationPanel(patient);
         setNotePanel();
-        setFileList();
+        setFileList(patient);
         setServicesPanel(patient);
         int serviceID = patient.getPatientID();
 
@@ -151,7 +152,38 @@ public class ServiceProfileUI {
         notePanel.setBackground(new Color(220, 220, 220));
     }
 
-    public void setFileList(){
+    public void setFileList(Patient patient){
+        documentlistarray = serviceController.service.getDocuments(patient.getPatientID());
+        if(documentlistarray == null){ return; }
+
+        DefaultListModel<Service> listModel = new DefaultListModel<>();
+        for (Service s : documentlistarray) {
+            listModel.addElement(s); // store Service objects directly
+        }
+        FileLIST.setModel(listModel);
+
+        FileLIST.setCellRenderer(new ListCellRenderer<Service>() {
+            @Override
+            public Component getListCellRendererComponent(JList<? extends Service> list, Service value, int index, boolean isSelected, boolean cellHasFocus) {
+                // Panel for each list item
+                JPanel card = new JPanel(new BorderLayout());
+                card.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1, true)); // rounded border
+                card.setBackground(Color.WHITE);
+                card.setMinimumSize(new Dimension(150, 30)); // min height
+                card.setPreferredSize(null);
+
+                JLabel label = new JLabel(value.getFile());
+                label.setBorder(new EmptyBorder(5, 10, 5, 10));
+                card.add(label, BorderLayout.CENTER);
+
+                if (isSelected) {
+                    card.setBackground(new Color(200, 230, 255));
+                }
+
+                return card;
+            }
+        });
+
         filesPanel.setPreferredSize(new Dimension(300, 150));
         filesPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
         filesPanel.setBackground(new Color(220, 220, 220));
@@ -159,7 +191,7 @@ public class ServiceProfileUI {
 
     public void setServicesPanel(Patient patient){
         servicelistarray = serviceController.service.getService(patient.getPatientID());
-        if(servicelistarray == null){ return; }
+        if(servicelistarray == null){ return;}
 
         DefaultListModel<Service> listModel = new DefaultListModel<>();
         for (Service s : servicelistarray) {
@@ -198,12 +230,10 @@ public class ServiceProfileUI {
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Service Profile");
-       // frame.setContentPane(new ServiceProfileUI().BackPanel);
+       // frame.setContentPane(new Views.ServiceProfileUI().BackPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
     }
-
-
 
 }

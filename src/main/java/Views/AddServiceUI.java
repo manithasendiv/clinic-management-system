@@ -12,6 +12,8 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 public class AddServiceUI {
     private JPanel addServiceForm;
@@ -75,14 +77,35 @@ public class AddServiceUI {
 
             if (result == JFileChooser.APPROVE_OPTION) {
                 selectedFile = fileChooser.getSelectedFile();
-                fileLabel.setText(selectedFile.getName()); // show file name
-                //serviceController.service.AddFile(selectedFile.getName(),selectedFile,patientID);
-                try (FileInputStream fis = new FileInputStream(selectedFile)) {
-                    System.out.println("File size: " + fis.available() + " bytes");
+                fileLabel.setText(selectedFile.getName());
+                try {
+                    File destDir = new File("C:\\Users\\isum\\OneDrive\\Desktop\\Y02 Sem02\\PPA\\ServiceManagementSystem\\clinic-management-system\\src\\main\\java\\Assets\\Documents\\");
+                    if (!destDir.exists()) destDir.mkdirs();
+
+
+                    String uniqueName = System.currentTimeMillis() + "_" + selectedFile.getName();
+                    File destFile = new File(destDir, uniqueName);
+
+
+                    Files.copy(selectedFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+
+                    boolean success = serviceController.service.AddFile(
+                            selectedFile.getName(),
+                            destFile.getAbsolutePath(),
+                            patientID
+                    );
+
+                    if (success) {
+                        JOptionPane.showMessageDialog(null, "File uploaded & record saved!");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Database insert failed!");
+                    }
                 } catch (IOException ex) {
                     ex.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Error reading file: " + ex.getMessage());
+                    JOptionPane.showMessageDialog(null, "Error copying file: " + ex.getMessage());
                 }
+
             } else {
                 fileLabel.setText("No file selected");
             }

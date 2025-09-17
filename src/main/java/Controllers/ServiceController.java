@@ -15,10 +15,6 @@ public class ServiceController {
             serviceObj = new Service(note,serviceID);
             return serviceObj;
         }
-        public Service addFile(int serviceID, File file){
-            serviceObj = new Service(file,serviceID);
-            return serviceObj;
-        }
 
         public Service AddService(String name,String doctor,int pateintID){
             serviceObj = new Service(name,doctor,pateintID);

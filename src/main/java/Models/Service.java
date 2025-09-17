@@ -8,12 +8,25 @@ public class Service {
     private String doctor;
     private String checkedTime;
     private String specialNotes;
-    private File file;
+    private String file;
+    private int fileID;
     private int patientID;
 
-    public Service(File file, int serviceID) {
+    public void setFileID(int fileID) {
+        this.fileID = fileID;
+    }
+
+    public void setPatientID(int patientID) {
+        this.patientID = patientID;
+    }
+
+    public int getFileID() {
+        return fileID;
+    }
+
+    public Service(int fileID, String file) {
+        this.fileID = fileID;
         this.file = file;
-        this.serviceID = serviceID;
     }
 
     public Service(String specialNotes, int serviceID) {
@@ -79,11 +92,11 @@ public class Service {
         this.specialNotes = specialNotes;
     }
 
-    public File getFile() {
+    public String getFile() {
         return file;
     }
 
-    public void setFile(File file) {
+    public void setFile(String file) {
         this.file = file;
     }
 }

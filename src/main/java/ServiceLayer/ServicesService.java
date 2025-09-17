@@ -85,24 +85,23 @@ public class ServicesService {
             return false;
         }
     }
-    /*
-    public boolean AddFile(String fname, File file, int id) {
-        String query = "INSERT INTO documents (Name, File, PatientID) VALUES (?, ?, ?)";
-        try (PreparedStatement ps = singleConn.getConnection().prepareStatement(query);
-             FileInputStream fis = new FileInputStream(file)) {
 
-            ps.setString(1, fname);         // File name (string)
-            ps.setBinaryStream(2, fis, (int) file.length()); // File content (binary)
-            ps.setInt(3, id);               // Patient ID
+    public boolean AddFile(String fname, String filePath, int patientId) {
+        String query = "INSERT INTO documents (Name, File, PatientID) VALUES (?, ?, ?)";
+
+        try (PreparedStatement ps = singleConn.getConnection().prepareStatement(query)) {
+            ps.setString(1, fname);       // The display name (maybe original file name)
+            ps.setString(2, filePath);    // The stored path on disk
+            ps.setInt(3, patientId);      // The patient this file belongs to
 
             int rows = ps.executeUpdate();
-            return rows > 0;
-
+            return rows > 0;  // true if insert worked
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
-    }*/
+    }
+
 
 
     public ArrayList<Service> getService(int id){
@@ -124,7 +123,23 @@ public class ServicesService {
             return null;
         }
     }
-
+    public ArrayList<Service> getDocuments(int id){
+        ArrayList<Service> serviceList = new ArrayList<>();
+        try {
+            String query = "SELECT DocumentID,Name FROM documents WHERE PatientID='" + id + "' ORDER BY TimeStamp DESC";
+            ResultSet resultSet = singleConn.executeSelectQuery(query);
+            while (resultSet.next()) {
+                serviceList.add(new Service(
+                        resultSet.getInt("DocumentID"),
+                        resultSet.getString("Name")
+                ));
+            }
+            return serviceList;
+        } catch (RuntimeException | SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
 
 
 
