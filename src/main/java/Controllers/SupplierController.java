@@ -5,7 +5,8 @@ import ServiceLayer.Supplierservise;
 
 public class SupplierController {
     Supplier objSupplier;
-    Supplierservise ObjSupplierService;
+    public Supplierservise ObjSupplierService;
+    private int SupplierID;
 
     public SupplierController() {
         ObjSupplierService = new Supplierservise();
@@ -28,7 +29,7 @@ public class SupplierController {
     }
 
     // Delete supplier
-    public boolean deleteSupplier(int SupplierID) {
-        return ObjSupplierService.updatesupplier(objSupplier);
+    public boolean deleteSupplier(int id) {
+        return ObjSupplierService.deleteSupplier(SupplierID);
     }
 }

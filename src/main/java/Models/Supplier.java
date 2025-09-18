@@ -21,7 +21,7 @@ public class Supplier {
         this.BankDetails = BankDetails;
     }
 
-    // Getters and setters
+    // Getters
     public int getSupplierID() { return SupplierID; }
 
 

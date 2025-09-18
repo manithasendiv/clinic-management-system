@@ -3,6 +3,10 @@ package ServiceLayer;
 import DatabaseLayer.DatabaseConnection;
 import Models.Supplier;
 
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Supplierservise {
     private DatabaseConnection singleConnection;
 
@@ -43,4 +47,35 @@ public class Supplierservise {
             return false;
         }
     }
+
+    // Delete supplier
+    public boolean deleteSupplier(int id) {
+        try {
+            String query = "DELETE FROM supplier WHERE SupplierID = " + id;
+            return singleConnection.ExecuteSQL(query);
+        } catch (Exception e) {
+            System.out.println("Error in deleting supplier: " + e.getMessage());
+            return false;
+        }
+    }
+
+
+    public List<Supplier> getSupplier(){
+        List<Supplier> patientList = new ArrayList<>();
+        try{
+            String query1 = "SELECT * FROM Supplier";
+            ResultSet resultSet = singleConnection.executeSelectQuery(query1);
+            while(resultSet.next()){
+                patientList.add(new Supplier(resultSet.getInt("SupplierID"),resultSet.getString("SupplierName"),resultSet.getString("Contact"),resultSet.getString("Products"),resultSet.getInt("CreditPeriod"),resultSet.getString("BankDetails")));
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return patientList;
+    }
+
+
+
+
 }
+
