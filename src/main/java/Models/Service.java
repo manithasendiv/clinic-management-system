@@ -1,7 +1,5 @@
 package Models;
 
-import java.io.File;
-
 public class Service {
     private int serviceID;
     private String serviceName;
@@ -10,8 +8,14 @@ public class Service {
     private String specialNotes;
     private String file;
     private int fileID;
+    private int noteID;
     private int patientID;
 
+
+
+    public int getNoteID() {
+        return noteID;
+    }
     public void setFileID(int fileID) {
         this.fileID = fileID;
     }
@@ -49,6 +53,13 @@ public class Service {
         this.doctor = doctor;
         this.serviceName = serviceName;
         this.patientID = patientID;
+    }
+
+    public Service(int serviceID,String specialNotes,String checkedTime,int noteID) {
+        this.checkedTime = checkedTime;
+        this.serviceID = serviceID;
+        this.specialNotes = specialNotes;
+        this.noteID = noteID;
     }
 
     public int getServiceID() {
@@ -93,7 +104,7 @@ public class Service {
     }
 
     public String getFile() {
-        return file;
+        return this.file;
     }
 
     public void setFile(String file) {

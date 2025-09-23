@@ -34,5 +34,6 @@ public class ServiceController {
 
         //public boolean addFileToDatabase() {return  service.}
         public  boolean addServiceToDatabase(){return  service.addService(serviceObj);}
+        public boolean deletenote(int noteid){return  service.deleteNote(noteid);}
 
 }

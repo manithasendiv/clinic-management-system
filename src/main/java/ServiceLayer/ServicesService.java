@@ -141,6 +141,42 @@ public class ServicesService {
         }
     }
 
+    public ArrayList<Service> getNotes(int id){
+        ArrayList<Service> serviceArrayList = new ArrayList<>();
+        try{
+            String query = "SELECT notes.ServiceID,notes.Note,notes.TimeStamp,notes.NoteID FROM notes JOIN service ON notes.ServiceID = service.ServiceID WHERE PatientID ="+id;
+            ResultSet resultSet = singleConn.executeSelectQuery(query);
+            while(resultSet.next()){
+                serviceArrayList.add(new Service(
+                        resultSet.getInt("ServiceID"),
+                        resultSet.getString("Note"),
+                        resultSet.getString("TimeStamp"),
+                        resultSet.getInt("NoteID")));
+            }
+            return serviceArrayList;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+//    public boolean updateNote(int serviceid,String note){
+//        try{
+//            String query ="UPDATE notes SET Note = " +note+"WHERE ServiceID="+serviceid;
+//            return singleConn.ExecuteSQL(query);
+//        } catch (Exception e) {
+//            System.out.println("Could not update Note"+e.getMessage());
+//            return false;
+//        }
+//    }
+    public boolean deleteNote(int nid){
+        try{
+           String query ="DELETE FROM notes Where NoteID="+nid;
+          return singleConn.ExecuteSQL(query);
+         } catch (Exception e) {
+           System.out.println("Could not update Note"+e.getMessage());
+           return false;
+        }
+    }
 
 
     public boolean addService(Service service){
@@ -168,5 +204,28 @@ public class ServicesService {
             return false;
         }
     }
+
+    public String getSingleServiceNote(int id) {
+        String sql = "SELECT Note FROM notes WHERE ServiceID = " + id;
+        String note = null;
+
+        try {
+            ResultSet rs = singleConn.executeSelectQuery(sql);
+
+            if (rs != null && rs.next()) {
+                note = rs.getString("Note");
+            }
+
+            if (rs != null) {
+                rs.close(); // close ResultSet to free resources
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error Retrieving Data: " + e.getMessage());
+        }
+
+        return note;
+    }
+
 
 }

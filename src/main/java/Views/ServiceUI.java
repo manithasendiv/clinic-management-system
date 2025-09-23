@@ -26,8 +26,12 @@ public class ServiceUI {
     private int selectedRow =-1;
     private TableRowSorter<DefaultTableModel> sorter;
 
-    public ServiceUI() {
 
+    public JPanel getMainPanel() {
+        return mainPanel;
+    }
+
+    public ServiceUI() {
         serviceController = new ServiceController();
         //table initializer
         String[] headers = {"PatientID", "Name", "Age", "PhoneNumber"};
@@ -51,11 +55,13 @@ public class ServiceUI {
                     selectedRow =  Integer.parseInt(PatientsList.getValueAt(row, 0).toString());
                     patient=serviceController.service.getPatientDetails(selectedRow);
                     System.out.println(patient);
-                    JFrame frame = new JFrame("Service Profile");
-                    frame.setContentPane(new ServiceProfileUI(patient).BackPanel);
-                    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    frame.pack();
-                    frame.setVisible(true);
+                    mainPanel.removeAll();
+                    mainPanel.setLayout(new BorderLayout());
+                    ServiceProfile s = new ServiceProfile(patient);
+
+                    mainPanel.add(s.getMainPanel(), BorderLayout.CENTER);
+                    mainPanel.revalidate();
+                    mainPanel.repaint();
                 }
             }
         });
@@ -73,6 +79,7 @@ public class ServiceUI {
             }
         });*/
     }
+
     private void performSearch() {
         String searchtext = searchTXT.getText().trim();
         if (searchtext.isEmpty()) {
@@ -117,6 +124,7 @@ public class ServiceUI {
         scrollPane.setViewportView(PatientsList);
     }*/
 
+
     public static void main(String[] args) {
         UIManager.put("ScrollBar.trackInsets", new Insets(2, 4, 2, 4));
         UIManager.put("ScrollBar.thumbInsets", new Insets(2, 2, 2, 2));
@@ -141,5 +149,11 @@ public class ServiceUI {
         frame.setVisible(true);
 
 
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+
+        mainPanel = new CustomComponents.RoundedPanel(20);
     }
 }

@@ -197,7 +197,7 @@ public class CustomComponents {
     static class RoundedPanel extends JPanel {
         private int cornerRadius;
         private Color borderColor = Color.BLACK; // default
-        private int borderThickness = 3; // default thickness
+        private int borderThickness = 1; // default thickness
 
         public RoundedPanel(int radius) {
             super();
@@ -425,4 +425,5 @@ public class CustomComponents {
             }
         }
     }
+
 }
