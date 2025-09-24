@@ -3,26 +3,34 @@ package Controllers;
 import Models.Bill;
 import ServiceLayer.BillService;
 
-import java.sql.ResultSet;
+import java.util.List;
 
 public class BillController {
-    public Bill objBill;
-    BillService objBillService;
+    private Bill objBill;
+    private BillService objBillService;
 
-    public BillController(){
-        objBillService= new BillService();
-    }
-    public void addBill(int billId,int patientId,String service,String pharmacyItems, double total, double discount){
-        objBill=new Bill(billId,patientId,service,pharmacyItems,total,discount);
+    public BillController() {
+        objBillService = new BillService();
     }
 
-    public boolean addBillToDatabase(){
+    public Bill addBill(int patientId, String service, String pharmacyItems, double total, double discount) {
+        objBill = new Bill(discount, total, pharmacyItems, service, patientId);
+        return objBill;
+    }
+
+    public boolean addBillToDatabase() {
         return objBillService.addBill(objBill);
     }
 
-    public boolean removeBill(int billId){
+    public boolean removeBill(int billId) {
         return objBillService.removeBill(billId);
     }
 
+    public List<Bill> getAllBills() {
+        return objBillService.getAllBills();
+    }
 
+    public boolean updateBill(int billId, Bill updatedBill) {
+        return objBillService.updateBill(billId, updatedBill);
+    }
 }
