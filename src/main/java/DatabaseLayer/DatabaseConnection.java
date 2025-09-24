@@ -1,22 +1,22 @@
-
 package DatabaseLayer;
 
 import java.sql.*;
 
 public class DatabaseConnection {
-    private final String URL = "jdbc:mysql://localhost:3306/clinic-management-system";
-    private final String username = "root";
-    private final String password = "";
+    private static final String URL = "jdbc:mysql://localhost:3306/clinic-management-system";
+    private static final String USER = "root";
+    private static final String PASSWORD = "";
 
     private static DatabaseConnection instance;
     private Connection connection;
     public ResultSet resultSet;
     public PreparedStatement preparedStatement;
 
+    // Private constructor for Singleton
     private DatabaseConnection() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection(URL, username, password);
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
         } catch (ClassNotFoundException e) {
             System.out.println("Driver not found: " + e.getMessage());
         } catch (SQLException e) {
@@ -24,25 +24,22 @@ public class DatabaseConnection {
         }
     }
 
+    // Singleton instance getter
     public static DatabaseConnection getSingleInstance() {
         try {
-            if (instance == null) {
+            if (instance == null || instance.connection.isClosed()) {
                 instance = new DatabaseConnection();
-            } else if (instance.connection.isClosed()) {
-                instance = new DatabaseConnection();
-            } else {
-                return instance;
             }
             return instance;
         } catch (SQLException e) {
-            System.out.println("Connection failed: " + e.getMessage());
+            System.out.println("Connection check failed: " + e.getMessage());
             return null;
         }
     }
 
-    public boolean ExecuteSQL(String sqlQuery) {
-        try {
-            Statement statement = connection.createStatement();
+    // Execute SQL (Insert, Update, Delete)
+    public boolean executeSQL(String sqlQuery) {
+        try (Statement statement = connection.createStatement()) {
             int result = statement.executeUpdate(sqlQuery);
             return result > 0;
         } catch (SQLException e) {
@@ -51,6 +48,7 @@ public class DatabaseConnection {
         }
     }
 
+    // Prepare statement
     public void setPreparedStatement(String sql) {
         try {
             preparedStatement = connection.prepareStatement(sql);
@@ -59,7 +57,8 @@ public class DatabaseConnection {
         }
     }
 
-    public ResultSet ExecutePreparedStatement() {
+    // Execute prepared statement (Select)
+    public ResultSet executePreparedStatement() {
         try {
             if (preparedStatement != null) {
                 resultSet = preparedStatement.executeQuery();
@@ -73,11 +72,13 @@ public class DatabaseConnection {
             return null;
         }
     }
- //
+
+    // Get raw connection if needed
     public Connection getConnection() {
         return connection;
     }
 
+    // Close connection
     public void closeConnection() {
         try {
             if (connection != null && !connection.isClosed()) {

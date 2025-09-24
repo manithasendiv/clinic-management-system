@@ -7,9 +7,12 @@ import java.util.List;
 
 public class PharmacyInventoryDAO {
 
+    // Add new item
     public boolean addItem(PharmacyInventory item) {
-        String sql = "INSERT INTO pharmacy_inventory (ItemName, Quantity, Stock, ManufactureDate, ExpiredDate, SalePrice, Discount, SupplierID, BoughtDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = DBConnection.getConnection();
+        String sql = "INSERT INTO pharmacy_inventory " +
+                "(ItemName, Quantity, Stock, ManufactureDate, ExpiredDate, SalePrice, Discount, SupplierID, BoughtDate) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = DatabaseConnection.getSingleInstance().getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, item.getItemName());
@@ -33,7 +36,8 @@ public class PharmacyInventoryDAO {
     public List<PharmacyInventory> getAllItems() {
         List<PharmacyInventory> list = new ArrayList<>();
         String sql = "SELECT * FROM pharmacy_inventory";
-        try (Connection conn = DBConnection.getConnection();
+
+        try (Connection conn = DatabaseConnection.getSingleInstance().getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
@@ -59,8 +63,9 @@ public class PharmacyInventoryDAO {
 
     // Update record
     public boolean updateItem(PharmacyInventory item) {
-        String sql = "UPDATE pharmacy_inventory SET ItemName=?, Quantity=?, Stock=?, ManufactureDate=?, ExpiredDate=?, SalePrice=?, Discount=?, SupplierID=?, BoughtDate=? WHERE ItemID=?";
-        try (Connection conn = DBConnection.getConnection();
+        String sql = "UPDATE pharmacy_inventory SET ItemName=?, Quantity=?, Stock=?, ManufactureDate=?, ExpiredDate=?, " +
+                "SalePrice=?, Discount=?, SupplierID=?, BoughtDate=? WHERE ItemID=?";
+        try (Connection conn = DatabaseConnection.getSingleInstance().getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, item.getItemName());
@@ -75,7 +80,7 @@ public class PharmacyInventoryDAO {
             stmt.setInt(10, item.getItemID());
 
             int rows = stmt.executeUpdate();
-            System.out.println("Rows updated: " + rows); // DEBUG
+            System.out.println("Rows updated: " + rows); // Debug log
             return rows > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -86,7 +91,7 @@ public class PharmacyInventoryDAO {
     // Delete record
     public boolean deleteItem(int itemId) {
         String sql = "DELETE FROM pharmacy_inventory WHERE ItemID=?";
-        try (Connection conn = DBConnection.getConnection();
+        try (Connection conn = DatabaseConnection.getSingleInstance().getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, itemId);
