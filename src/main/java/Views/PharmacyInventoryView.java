@@ -1,7 +1,7 @@
 package Views;
 
 import Models.PharmacyInventory;
-import ServiceLayer.PharmacyInventoryService;
+import Controllers.PharmacyInventoryController;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -15,7 +15,7 @@ public class PharmacyInventoryView {
     private JTable table1;
     private JPanel panel1;
 
-    private PharmacyInventoryService service = new PharmacyInventoryService();
+    private PharmacyInventoryController service = new PharmacyInventoryController();
 
     public PharmacyInventoryView() {
         panel1 = new JPanel(new BorderLayout(10, 10));
