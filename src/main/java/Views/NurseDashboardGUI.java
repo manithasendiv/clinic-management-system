@@ -51,7 +51,11 @@ public class NurseDashboardGUI {
         btnBillManagement.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // dulashsana
+                BillDashbord billDashbord = new BillDashbord();
+                ViewPanel.removeAll();
+                ViewPanel.add(billDashbord.getContentPane());
+                ViewPanel.revalidate();
+                ViewPanel.repaint();
             }
         });
     }
