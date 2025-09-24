@@ -22,9 +22,8 @@ public class NotesPanel {
     ServiceController serviceController;
     ArrayList<Service> noteList;
 
-    NotesPanel(int id){
-        serviceController = new ServiceController();
-
+    NotesPanel(int id,ServiceController sControllerObject){
+        serviceController = sControllerObject;
 
         //setting delete btn
         ImageIcon deleteicon = new ImageIcon("src/main/java/Assets/delete_24dp_000000_FILL0_wght400_GRAD0_opsz24.png");

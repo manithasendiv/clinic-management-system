@@ -11,6 +11,14 @@ public class Patient {
     private String bloodType;
     private String allergies;
 
+    public Patient(String gender, String illness, String bloodType, String allergies, String blood, int patientID) {
+        this.gender = gender;
+        this.illness = illness;
+        this.bloodType = bloodType;
+        this.allergies = allergies;
+        this.patientID = patientID;
+    }
+
     public Patient(int patientID, String name, int age, String phoneNumber) {
         this.patientID = patientID;
         this.name = name;

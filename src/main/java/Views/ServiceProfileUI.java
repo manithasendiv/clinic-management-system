@@ -13,7 +13,6 @@ import java.util.ArrayList;
 
 public class ServiceProfileUI {
     JPanel BackPanel;
-    private JScrollPane ScrollPane1;
     private JButton addButton;
     private JTextArea textAreaNotes;
     private JButton addFilesBTN;
@@ -36,7 +35,7 @@ public class ServiceProfileUI {
     JButton addServiceBTN;
     JScrollPane servicescroll;
     private JButton RemoveBTN;
-    private JButton backBTN;
+    private JPanel Main;
     Service service;
     ServiceController serviceController;
     ArrayList<Service> servicelistarray;
@@ -75,7 +74,7 @@ public class ServiceProfileUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = new JFrame("AddService");
-                frame.setContentPane(new AddServiceUI(patient.getPatientID()).mainPanelAddServiceUI);
+                frame.setContentPane(new AddServiceUI(patient.getPatientID(),serviceController).mainPanelAddServiceUI);
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 frame.pack();
                 frame.setVisible(true);
@@ -104,11 +103,7 @@ public class ServiceProfileUI {
     }
 
     public void setProfilePanel(Patient patient){
-        profiledetailpanel.setPreferredSize(new Dimension(150, 150));
-        profiledetailpanel.setMinimumSize(new Dimension(150, 150));
-        profiledetailpanel.setMaximumSize(new Dimension(150, 150));
-
-        profiledetailpanel.setBackground(new Color(220, 220, 220));
+        profiledetailpanel.setBackground(new Color(255, 255, 255));
         profiledetailpanel.setLayout(new BoxLayout(this.profiledetailpanel, BoxLayout.Y_AXIS));
 
         ImageIcon imageIcon = new ImageIcon("C:\\Users\\isum\\OneDrive\\Desktop\\Y02 Sem02\\PPA\\ServiceManagementSystem\\" +
@@ -236,4 +231,11 @@ public class ServiceProfileUI {
         frame.setVisible(true);
     }
 
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+
+        profiledetailpanel = new CustomComponents.RoundedPanel(20);
+
+
+    }
 }

@@ -29,9 +29,9 @@ public class AddServiceUI {
     ServiceController serviceController;
 
 
-    public AddServiceUI(int patientID){
+    public AddServiceUI(int patientID,ServiceController s){
         lblPatientName.setText("PatientID: "+patientID);
-        serviceController = new ServiceController();
+        serviceController = s;
 
         saveDetailsButton.addActionListener(new ActionListener() {
             @Override

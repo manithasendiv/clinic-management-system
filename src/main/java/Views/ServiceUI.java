@@ -32,7 +32,7 @@ public class ServiceUI {
     }
 
     public ServiceUI() {
-        serviceController = new ServiceController();
+        this.serviceController = new ServiceController();
         //table initializer
         String[] headers = {"PatientID", "Name", "Age", "PhoneNumber"};
         PatientsList = new CustomComponents.CustomTableServiceUI(new Object[][]{}, headers);
@@ -57,7 +57,7 @@ public class ServiceUI {
                     System.out.println(patient);
                     mainPanel.removeAll();
                     mainPanel.setLayout(new BorderLayout());
-                    ServiceProfile s = new ServiceProfile(patient);
+                    ServiceProfile s = new ServiceProfile(patient,serviceController);
 
                     mainPanel.add(s.getMainPanel(), BorderLayout.CENTER);
                     mainPanel.revalidate();

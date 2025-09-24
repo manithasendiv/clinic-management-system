@@ -9,6 +9,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,6 +44,8 @@ public class ServiceProfile {
     private JButton ShowNotes;
     private JScrollPane txtareawrapspane;
     private JButton btnnew;
+    private JButton btndeleteSer;
+    private JButton btneditadd;
     private int selectedRow =-1;
     private JLabel btnLblBack;
 
@@ -59,9 +63,9 @@ public class ServiceProfile {
     ArrayList<Service> documentList;
 
     //Constructor for Service UI
-    ServiceProfile(Patient patient){
+    ServiceProfile(Patient patient,ServiceController s){
         //Constructing object
-        serviceController =new ServiceController();
+        this.serviceController =s;
 
         //Method Calls For Setting Panels
         SetTopPanel(patient);
@@ -73,7 +77,11 @@ public class ServiceProfile {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //back button code here
-
+                JPanel parent = (JPanel) contentPane.getParent(); // get the container that holds ServiceProfile
+                parent.removeAll();
+                parent.add(new ServiceUI().getMainPanel(), BorderLayout.CENTER);
+                parent.revalidate();
+                parent.repaint();
             }
         });
         btnAddFile.addActionListener(new ActionListener() {
@@ -81,7 +89,7 @@ public class ServiceProfile {
             public void actionPerformed(ActionEvent e) {
                 //File upload Button Work Here
                 JFrame frame = new JFrame("UploadFile");
-                frame.setContentPane(new FileUploadPanel(patient).getContentPane());
+                frame.setContentPane(new FileUploadPanel(patient,serviceController).getContentPane());
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 frame.pack();
                 frame.setLocationRelativeTo(null);
@@ -89,7 +97,7 @@ public class ServiceProfile {
                 frame.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                        SetDocumentPanel(patient); // refresh the list
+                        refreshDocumentList(patient); // refresh the list
                     }
                 });
             }
@@ -98,7 +106,7 @@ public class ServiceProfile {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = new JFrame("AddService");
-                frame.setContentPane(new AddServiceUI(patient.getPatientID()).mainPanelAddServiceUI);
+                frame.setContentPane(new AddServiceUI(patient.getPatientID(),serviceController).mainPanelAddServiceUI);
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 frame.pack();
                 frame.setLocationRelativeTo(null);
@@ -106,8 +114,7 @@ public class ServiceProfile {
                 frame.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                        SetServicePanel(patient); // refresh the list
-                        loadServiceData();
+                        loadServiceData(patient); // refresh the list
                     }
                 });
             }
@@ -116,7 +123,7 @@ public class ServiceProfile {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = new JFrame("Notes");
-                frame.setContentPane(new NotesPanel(patient.getPatientID()).getContentPane());
+                frame.setContentPane(new NotesPanel(patient.getPatientID(),serviceController).getContentPane());
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 frame.pack();
                 frame.setLocationRelativeTo(null);
@@ -168,10 +175,59 @@ public class ServiceProfile {
                 txtNote.setText(null);
             }
         });
+        btndeleteSer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = SerList.getSelectedRow(); // get selected row
+                if (selectedIndex != -1) { // make sure something is selected
+                    // Get the service ID from column 0 of the selected row
+                    int serviceID = (int) SerList.getValueAt(selectedIndex, 0);
+
+                    // Call controller to remove it from DB
+                    serviceController.removeService(serviceID);
+                    System.out.println("Removed service ID: " + serviceID);
+
+                    // Remove from your ArrayList too
+                    serviceList.removeIf(s -> s.getServiceID() == serviceID);
+
+                    // Remove the row from JTable model
+                    DefaultTableModel model = (DefaultTableModel) SerList.getModel();
+                    model.removeRow(selectedIndex);
+                }
+
+            }
+        });
+        DocList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                int index = DocList.getSelectedIndex();
+                if (index != -1 && index < documentList.size()) {
+                    Service service = documentList.get(index); // get the corresponding Service object
+                    String filePath = service.getFilePath();       // get the file path
+                    openPDF(filePath);
+                }
+            }
+        });
+
+        btneditadd.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frame = new JFrame("Profile");
+                frame.setContentPane(new UpdatePatientUI(patient,serviceController).getContentPane());
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                frame.pack();
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+            }
+        });
     }
 
 
     private void SetTopPanel(Patient patient){ //Setting Patient Profile Method
+        //setting profile btn
+        ImageIcon editbtnicon  = new ImageIcon("src/main/java/Assets/person_edit_24dp_000000_FILL0_wght400_GRAD0_opsz24.png");
+        btneditadd.setIcon(editbtnicon);
         //setting profile image
         ImageIcon profileImage = new ImageIcon("src/main/java/Assets/icons/UserAvatar.png");
         Image image = profileImage.getImage();
@@ -214,14 +270,7 @@ public class ServiceProfile {
         ImageIcon fileAttachment = new ImageIcon("src/main/java/Assets/attach_file_add_25dp_000000_FILL0_wght400_GRAD0_opsz24.png");
         btnAddFile.setIcon(fileAttachment);
 
-        //adding file list
-        documentList = serviceController.service.getDocuments(patient.getPatientID());
-        if(documentList == null){ return;}//error handling
-        DefaultListModel<Service> listModel = new DefaultListModel<>();
-        for (Service s : documentList) {
-            listModel.addElement(s); // store Service objects directly
-        }
-        DocList.setModel(listModel);
+        DocList.setModel(new DefaultListModel<>());
         DocList.setCellRenderer(new ListCellRenderer<Service>() {
             @Override
             public Component getListCellRendererComponent(JList<? extends Service> list, Service value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -253,11 +302,15 @@ public class ServiceProfile {
             }
         });
 
+        //dynamic loader call
+        refreshDocumentList(patient);
 
     }
     private void SetServicePanel(Patient patient){
         ImageIcon AddServices = new ImageIcon("src/main/java/Assets/docs_add_on_25dp_000000_FILL0_wght400_GRAD0_opsz24.png");
         btnaddSer.setIcon(AddServices);
+        ImageIcon deleteservice = new ImageIcon("src/main/java/Assets/delete_24dp_000000_FILL0_wght400_GRAD0_opsz24.png");
+        btndeleteSer.setIcon(deleteservice);
 
         serviceList = serviceController.service.getService(patient.getPatientID());
         if(serviceList == null){ return;}
@@ -266,7 +319,10 @@ public class ServiceProfile {
         SerList = new CustomComponents.CustomTableServiceUI(new Object[][]{},headers);
         SerList.setTableHeader(null);
         SerSPane.setViewportView(SerList);
-        loadServiceData();
+
+
+        //dynamic loader call
+        loadServiceData(patient);
 
 
 
@@ -337,7 +393,9 @@ public class ServiceProfile {
     }
 
 
-    private void loadServiceData(){
+    private void loadServiceData(Patient patient){
+        serviceList = serviceController.service.getService(patient.getPatientID());
+        if (serviceList == null) return;
         //service list loader
         DefaultTableModel model = (DefaultTableModel) SerList.getModel();
         model.setRowCount(0); // clear old data
@@ -363,6 +421,38 @@ public class ServiceProfile {
         }
 
     }
+
+    private void refreshDocumentList(Patient patient) {
+        documentList = serviceController.service.getDocuments(patient.getPatientID());
+        if (documentList == null) return;
+
+        DefaultListModel<Service> model = (DefaultListModel<Service>) DocList.getModel();
+        model.clear();
+
+        for (Service s : documentList) {
+            model.addElement(s);
+        }
+    }
+    //pdf viewer chatgpt
+    private void openPDF(String filePath) {
+        try {
+            File pdfFile = new File(filePath);
+            if (pdfFile.exists()) {
+                if (Desktop.isDesktopSupported()) {
+                    Desktop.getDesktop().open(pdfFile); // opens with default system PDF viewer
+                } else {
+                    JOptionPane.showMessageDialog(contentPane, "Desktop not supported.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(contentPane, "File not found: " + filePath, "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(contentPane, "Failed to open PDF: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+
+
     private void createUIComponents() {
         // TODO: place custom component creation code here
         //Top Panel Customization

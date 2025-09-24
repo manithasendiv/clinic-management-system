@@ -126,12 +126,13 @@ public class ServicesService {
     public ArrayList<Service> getDocuments(int id){
         ArrayList<Service> serviceList = new ArrayList<>();
         try {
-            String query = "SELECT DocumentID,Name FROM documents WHERE PatientID='" + id + "' ORDER BY TimeStamp DESC";
+            String query = "SELECT DocumentID,Name,File FROM documents WHERE PatientID='" + id + "' ORDER BY TimeStamp DESC";
             ResultSet resultSet = singleConn.executeSelectQuery(query);
             while (resultSet.next()) {
                 serviceList.add(new Service(
                         resultSet.getInt("DocumentID"),
-                        resultSet.getString("Name")
+                        resultSet.getString("Name"),
+                        resultSet.getString("File")
                 ));
             }
             return serviceList;
@@ -226,6 +227,39 @@ public class ServicesService {
 
         return note;
     }
+
+    public boolean addPatientDetails(Patient patient){
+        try{
+            String query = "INSERT INTO description (PatientID, Gender, Illness,Allergies,BloodType) VALUES ('"
+                    + patient.getPatientID() + "', '"
+                    + patient.getGender() + "', "
+                    + patient.getIllness() +"', "+patient.getAllergies()+"', "+patient.getBloodType()+ ")";
+
+            boolean result = singleConn.ExecuteSQL(query);
+            return result;
+        }catch (Exception ex){
+            System.out.println("Cannot Insert a Service: " + ex.getMessage());
+            return false;
+        }
+    }
+
+    public boolean updatePatientDetails(Patient patient) {
+        try {
+            String query = "UPDATE description SET "
+                    + "Gender = '" + patient.getGender() + "', "
+                    + "Illness = '" + patient.getIllness() + "', "
+                    + "Allergies = '" + patient.getAllergies() + "', "
+                    + "BloodType = '" + patient.getBloodType() + "' "
+                    + "WHERE PatientID = '" + patient.getPatientID() + "'";
+
+            boolean result = singleConn.ExecuteSQL(query);
+            return result;
+        } catch (Exception ex) {
+            System.out.println("Cannot Update Patient Details: " + ex.getMessage());
+            return false;
+        }
+    }
+
 
 
 }

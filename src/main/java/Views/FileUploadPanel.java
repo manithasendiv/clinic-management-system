@@ -21,8 +21,10 @@ public class FileUploadPanel {
         return ContentPane;
     }
 
-    FileUploadPanel(Patient patient){
-        serviceController = new ServiceController();
+    FileUploadPanel(Patient patient,ServiceController s){
+        //constructing object
+        serviceController =s;
+
         SetFileChooserPanel(patient.getPatientID());
 
 

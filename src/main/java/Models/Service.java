@@ -7,30 +7,15 @@ public class Service {
     private String checkedTime;
     private String specialNotes;
     private String file;
+    private String filePath;
     private int fileID;
     private int noteID;
     private int patientID;
 
-
-
-    public int getNoteID() {
-        return noteID;
-    }
-    public void setFileID(int fileID) {
-        this.fileID = fileID;
-    }
-
-    public void setPatientID(int patientID) {
-        this.patientID = patientID;
-    }
-
-    public int getFileID() {
-        return fileID;
-    }
-
-    public Service(int fileID, String file) {
+    public Service(int fileID, String file, String filePath) {
         this.fileID = fileID;
         this.file = file;
+        this.filePath = filePath;
     }
 
     public Service(String specialNotes, int serviceID) {
@@ -60,6 +45,26 @@ public class Service {
         this.serviceID = serviceID;
         this.specialNotes = specialNotes;
         this.noteID = noteID;
+    }
+
+
+    public int getNoteID() {
+        return noteID;
+    }
+    public void setFileID(int fileID) {
+        this.fileID = fileID;
+    }
+
+    public void setPatientID(int patientID) {
+        this.patientID = patientID;
+    }
+
+    public int getFileID() {
+        return fileID;
+    }
+
+    public String getFilePath() {
+        return filePath;
     }
 
     public int getServiceID() {
