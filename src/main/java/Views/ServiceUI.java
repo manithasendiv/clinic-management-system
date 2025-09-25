@@ -1,7 +1,7 @@
 package Views;
 
 import Controllers.ServiceController;
-import Models.Patient;
+import Models.PatientReport;
 
 import com.formdev.flatlaf.FlatLightLaf;
 
@@ -22,7 +22,7 @@ public class ServiceUI {
     private JTable PatientsList;
     private JScrollPane scrollPane;
     ServiceController serviceController;
-    Patient patient;
+    PatientReport patientReport;
     private int selectedRow =-1;
     private TableRowSorter<DefaultTableModel> sorter;
 
@@ -53,11 +53,11 @@ public class ServiceUI {
                 int row =  PatientsList.getSelectedRow();
                 if(row >=0){
                     selectedRow =  Integer.parseInt(PatientsList.getValueAt(row, 0).toString());
-                    patient=serviceController.service.getPatientDetails(selectedRow);
-                    System.out.println(patient);
+                    patientReport =serviceController.service.getPatientDetails(selectedRow);
+                    System.out.println(patientReport);
                     mainPanel.removeAll();
                     mainPanel.setLayout(new BorderLayout());
-                    ServiceProfile s = new ServiceProfile(patient,serviceController);
+                    ServiceProfile s = new ServiceProfile(patientReport,serviceController);
 
                     mainPanel.add(s.getMainPanel(), BorderLayout.CENTER);
                     mainPanel.revalidate();
@@ -92,16 +92,16 @@ public class ServiceUI {
 
 
     public void loadData() {
-        List<Patient> patientList = serviceController.service.getPatients();
+        List<PatientReport> patientReportList = serviceController.service.getPatients();
         DefaultTableModel model = (DefaultTableModel) PatientsList.getModel();
         model.setRowCount(0); // clear old data
 
-        for (Patient patient : patientList) {
+        for (PatientReport patientReport : patientReportList) {
             model.addRow(new Object[]{
-                    patient.getPatientID(),
-                    patient.getName(),
-                    patient.getAge(),
-                    patient.getPhoneNumber()
+                    patientReport.getPatientID(),
+                    patientReport.getName(),
+                    patientReport.getAge(),
+                    patientReport.getPhoneNumber()
             });
         }
     }

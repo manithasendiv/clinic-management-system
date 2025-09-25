@@ -1,7 +1,7 @@
 package Views;
 
 import Controllers.ServiceController;
-import Models.Patient;
+import Models.PatientReport;
 import Models.Service;
 
 import javax.swing.*;
@@ -41,14 +41,14 @@ public class ServiceProfileUI {
     ArrayList<Service> servicelistarray;
     ArrayList<Service> documentlistarray;
 
-    ServiceProfileUI(Patient patient){
+    ServiceProfileUI(PatientReport patientReport){
         serviceController = new ServiceController();
-        setProfilePanel(patient);
-        setGeneralInformationPanel(patient);
+        setProfilePanel(patientReport);
+        setGeneralInformationPanel(patientReport);
         setNotePanel();
-        setFileList(patient);
-        setServicesPanel(patient);
-        int serviceID = patient.getPatientID();
+        setFileList(patientReport);
+        setServicesPanel(patientReport);
+        int serviceID = patientReport.getPatientID();
 
         addButton.addActionListener(new ActionListener() {
             @Override
@@ -74,14 +74,14 @@ public class ServiceProfileUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = new JFrame("AddService");
-                frame.setContentPane(new AddServiceUI(patient.getPatientID(),serviceController).mainPanelAddServiceUI);
+                frame.setContentPane(new AddServiceUI(patientReport.getPatientID(),serviceController).mainPanelAddServiceUI);
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 frame.pack();
                 frame.setVisible(true);
                 frame.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                        setServicesPanel(patient); // refresh the list
+                        setServicesPanel(patientReport); // refresh the list
                     }
                 });
             }
@@ -102,7 +102,7 @@ public class ServiceProfileUI {
 
     }
 
-    public void setProfilePanel(Patient patient){
+    public void setProfilePanel(PatientReport patientReport){
         profiledetailpanel.setBackground(new Color(255, 255, 255));
         profiledetailpanel.setLayout(new BoxLayout(this.profiledetailpanel, BoxLayout.Y_AXIS));
 
@@ -113,10 +113,10 @@ public class ServiceProfileUI {
         ImageCenterRounded.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 
-        lblName.setText(patient.getName());
+        lblName.setText(patientReport.getName());
         lblName.setFont(new Font("Arial", Font.BOLD, 14));
         lblName.setAlignmentX(Component.CENTER_ALIGNMENT);
-        lblgmail.setText(patient.getPhoneNumber());
+        lblgmail.setText(patientReport.getPhoneNumber());
         lblgmail.setFont(new Font("Arial", Font.PLAIN, 12));
         lblgmail.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -129,16 +129,16 @@ public class ServiceProfileUI {
 
     }
 
-    public void setGeneralInformationPanel(Patient patient){
+    public void setGeneralInformationPanel(PatientReport patientReport){
         generalInformationPanel.setPreferredSize(new Dimension(300, 150));
         generalInformationPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
         generalInformationPanel.setBackground(new Color(220, 220, 220));
-        lblgender.setText(patient.getGender());
-        lblPhone.setText(patient.getPhoneNumber());
-        lblRegDate.setText(patient.getRegDate());
-        lblillness.setText(patient.getIllness());
-        lblAllergies.setText(patient.getAllergies());
-        lblblood.setText(patient.getBloodType());
+        lblgender.setText(patientReport.getGender());
+        lblPhone.setText(patientReport.getPhoneNumber());
+        lblRegDate.setText(patientReport.getRegDate());
+        lblillness.setText(patientReport.getIllness());
+        lblAllergies.setText(patientReport.getAllergies());
+        lblblood.setText(patientReport.getBloodType());
     }
 
     public void setNotePanel(){
@@ -147,8 +147,8 @@ public class ServiceProfileUI {
         notePanel.setBackground(new Color(220, 220, 220));
     }
 
-    public void setFileList(Patient patient){
-        documentlistarray = serviceController.service.getDocuments(patient.getPatientID());
+    public void setFileList(PatientReport patientReport){
+        documentlistarray = serviceController.service.getDocuments(patientReport.getPatientID());
         if(documentlistarray == null){ return; }
 
         DefaultListModel<Service> listModel = new DefaultListModel<>();
@@ -184,8 +184,8 @@ public class ServiceProfileUI {
         filesPanel.setBackground(new Color(220, 220, 220));
     }
 
-    public void setServicesPanel(Patient patient){
-        servicelistarray = serviceController.service.getService(patient.getPatientID());
+    public void setServicesPanel(PatientReport patientReport){
+        servicelistarray = serviceController.service.getService(patientReport.getPatientID());
         if(servicelistarray == null){ return;}
 
         DefaultListModel<Service> listModel = new DefaultListModel<>();

@@ -3,7 +3,7 @@ package Views;
 import Controllers.BillController;
 import Controllers.ServiceController;
 import Models.Bill;
-import Models.Patient;
+import Models.PatientReport;
 import Models.PharmacyItem;
 
 import javax.swing.*;
@@ -56,7 +56,7 @@ public class BillDashbord {
     private TableRowSorter<DefaultTableModel> sorter;
     BillController billController;
     ServiceController serviceController;
-    Patient patient;
+    PatientReport patientReport;
     private static int counter = 1;
 
     List<PharmacyItem> itemList;
@@ -95,8 +95,8 @@ public class BillDashbord {
                 int row = PatientList.getSelectedRow();
                 if (row >= 0) {
                     selectedRow = Integer.parseInt(PatientList.getValueAt(row, 0).toString());
-                    patient = serviceController.service.getPatientDetails(selectedRow);
-                    setForm(patient);
+                    patientReport = serviceController.service.getPatientDetails(selectedRow);
+                    setForm(patientReport);
                 }
             }
         });
@@ -135,26 +135,26 @@ public class BillDashbord {
     }
 
     public void loadData() {
-        List<Patient> patientList = serviceController.service.getPatients();
+        List<PatientReport> patientReportList = serviceController.service.getPatients();
         DefaultTableModel model = (DefaultTableModel) PatientList.getModel();
         model.setRowCount(0);
 
-        for (Patient patient : patientList) {
+        for (PatientReport patientReport : patientReportList) {
             model.addRow(new Object[]{
-                    patient.getPatientID(),
-                    patient.getName(),
-                    patient.getAge(),
-                    patient.getPhoneNumber()
+                    patientReport.getPatientID(),
+                    patientReport.getName(),
+                    patientReport.getAge(),
+                    patientReport.getPhoneNumber()
             });
         }
     }
 
-    private void setForm(Patient patient) {
-        lblpatientID.setText("PatientID: " + patient.getPatientID());
-        lblpatientname.setText(patient.getName());
+    private void setForm(PatientReport patientReport) {
+        lblpatientID.setText("PatientID: " + patientReport.getPatientID());
+        lblpatientname.setText(patientReport.getName());
         lblinvoiceID.setText(generateInvoiceId());
         lblcurrentdate.setText(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-        lblname.setText(patient.getName());
+        lblname.setText(patientReport.getName());
     }
 
     public static String generateInvoiceId() {
@@ -197,7 +197,7 @@ public class BillDashbord {
     }
 
     private void generateBill() {
-        if (patient == null) {
+        if (patientReport == null) {
             JOptionPane.showMessageDialog(null, "Please select a patient first.");
             return;
         }
@@ -215,7 +215,7 @@ public class BillDashbord {
 
             String invoiceId = lblinvoiceID.getText();
 
-            Bill bill = new Bill(discount, service, patient.getPatientID(), invoiceId, total);
+            Bill bill = new Bill(discount, service, patientReport.getPatientID(), invoiceId, total);
             boolean success = billController.objBillService.addBill(bill);
 
             if (success) {

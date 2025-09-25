@@ -1,7 +1,7 @@
 package Views;
 
 import Controllers.ServiceController;
-import Models.Patient;
+import Models.PatientReport;
 import Models.Service;
 
 import javax.swing.*;
@@ -63,14 +63,14 @@ public class ServiceProfile {
     ArrayList<Service> documentList;
 
     //Constructor for Service UI
-    ServiceProfile(Patient patient,ServiceController s){
+    ServiceProfile(PatientReport patientReport, ServiceController s){
         //Constructing object
         this.serviceController =s;
 
         //Method Calls For Setting Panels
-        SetTopPanel(patient);
-        SetDocumentPanel(patient);
-        SetServicePanel(patient);
+        SetTopPanel(patientReport);
+        SetDocumentPanel(patientReport);
+        SetServicePanel(patientReport);
         SetNotePanel();
 
         btnBack.addActionListener(new ActionListener() {
@@ -89,7 +89,7 @@ public class ServiceProfile {
             public void actionPerformed(ActionEvent e) {
                 //File upload Button Work Here
                 JFrame frame = new JFrame("UploadFile");
-                frame.setContentPane(new FileUploadPanel(patient,serviceController).getContentPane());
+                frame.setContentPane(new FileUploadPanel(patientReport,serviceController).getContentPane());
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 frame.pack();
                 frame.setLocationRelativeTo(null);
@@ -97,7 +97,7 @@ public class ServiceProfile {
                 frame.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                        refreshDocumentList(patient); // refresh the list
+                        refreshDocumentList(patientReport); // refresh the list
                     }
                 });
             }
@@ -106,7 +106,7 @@ public class ServiceProfile {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = new JFrame("AddService");
-                frame.setContentPane(new AddServiceUI(patient.getPatientID(),serviceController).mainPanelAddServiceUI);
+                frame.setContentPane(new AddServiceUI(patientReport.getPatientID(),serviceController).mainPanelAddServiceUI);
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 frame.pack();
                 frame.setLocationRelativeTo(null);
@@ -114,7 +114,7 @@ public class ServiceProfile {
                 frame.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                        loadServiceData(patient); // refresh the list
+                        loadServiceData(patientReport); // refresh the list
                     }
                 });
             }
@@ -123,7 +123,7 @@ public class ServiceProfile {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = new JFrame("Notes");
-                frame.setContentPane(new NotesPanel(patient.getPatientID(),serviceController).getContentPane());
+                frame.setContentPane(new NotesPanel(patientReport.getPatientID(),serviceController).getContentPane());
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 frame.pack();
                 frame.setLocationRelativeTo(null);
@@ -214,7 +214,7 @@ public class ServiceProfile {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = new JFrame("Profile");
-                frame.setContentPane(new UpdatePatientUI(patient,serviceController).getContentPane());
+                frame.setContentPane(new UpdatePatientUI(patientReport,serviceController).getContentPane());
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 frame.pack();
                 frame.setLocationRelativeTo(null);
@@ -224,7 +224,7 @@ public class ServiceProfile {
     }
 
 
-    private void SetTopPanel(Patient patient){ //Setting Patient Profile Method
+    private void SetTopPanel(PatientReport patientReport){ //Setting Patient Profile Method
         //setting profile btn
         ImageIcon editbtnicon  = new ImageIcon("src/main/java/Assets/person_edit_24dp_000000_FILL0_wght400_GRAD0_opsz24.png");
         btneditadd.setIcon(editbtnicon);
@@ -242,19 +242,19 @@ public class ServiceProfile {
         //Setting Other details
         try{
             assert lblName != null;
-            lblName.setText(patient.getName());
+            lblName.setText(patientReport.getName());
             assert lblGender != null;
-            lblGender.setText(patient.getGender());
+            lblGender.setText(patientReport.getGender());
             assert lblPhoneNo != null;
-            lblPhoneNo.setText(patient.getPhoneNumber());
+            lblPhoneNo.setText(patientReport.getPhoneNumber());
             assert lblIllness != null;
-            lblIllness.setText(patient.getIllness());
+            lblIllness.setText(patientReport.getIllness());
             assert lblBloodType != null;
-            lblBloodType.setText(patient.getBloodType());
+            lblBloodType.setText(patientReport.getBloodType());
             assert lblRegDate != null;
-            lblRegDate.setText(patient.getRegDate());
+            lblRegDate.setText(patientReport.getRegDate());
             assert lblAllergies != null;
-            lblAllergies.setText(patient.getAllergies());
+            lblAllergies.setText(patientReport.getAllergies());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -266,7 +266,7 @@ public class ServiceProfile {
         ImageIcon newicon = new ImageIcon("src/main/java/Assets/note_add_24dp_000000_FILL0_wght400_GRAD0_opsz24.png");
         btnnew.setIcon(newicon);
     }
-    private void SetDocumentPanel(Patient patient){
+    private void SetDocumentPanel(PatientReport patientReport){
         ImageIcon fileAttachment = new ImageIcon("src/main/java/Assets/attach_file_add_25dp_000000_FILL0_wght400_GRAD0_opsz24.png");
         btnAddFile.setIcon(fileAttachment);
 
@@ -303,16 +303,16 @@ public class ServiceProfile {
         });
 
         //dynamic loader call
-        refreshDocumentList(patient);
+        refreshDocumentList(patientReport);
 
     }
-    private void SetServicePanel(Patient patient){
+    private void SetServicePanel(PatientReport patientReport){
         ImageIcon AddServices = new ImageIcon("src/main/java/Assets/docs_add_on_25dp_000000_FILL0_wght400_GRAD0_opsz24.png");
         btnaddSer.setIcon(AddServices);
         ImageIcon deleteservice = new ImageIcon("src/main/java/Assets/delete_24dp_000000_FILL0_wght400_GRAD0_opsz24.png");
         btndeleteSer.setIcon(deleteservice);
 
-        serviceList = serviceController.service.getService(patient.getPatientID());
+        serviceList = serviceController.service.getService(patientReport.getPatientID());
         if(serviceList == null){ return;}
         String[] headers ={"o","o","o","o"};
         //Table without header
@@ -322,7 +322,7 @@ public class ServiceProfile {
 
 
         //dynamic loader call
-        loadServiceData(patient);
+        loadServiceData(patientReport);
 
 
 
@@ -393,8 +393,8 @@ public class ServiceProfile {
     }
 
 
-    private void loadServiceData(Patient patient){
-        serviceList = serviceController.service.getService(patient.getPatientID());
+    private void loadServiceData(PatientReport patientReport){
+        serviceList = serviceController.service.getService(patientReport.getPatientID());
         if (serviceList == null) return;
         //service list loader
         DefaultTableModel model = (DefaultTableModel) SerList.getModel();
@@ -422,8 +422,8 @@ public class ServiceProfile {
 
     }
 
-    private void refreshDocumentList(Patient patient) {
-        documentList = serviceController.service.getDocuments(patient.getPatientID());
+    private void refreshDocumentList(PatientReport patientReport) {
+        documentList = serviceController.service.getDocuments(patientReport.getPatientID());
         if (documentList == null) return;
 
         DefaultListModel<Service> model = (DefaultListModel<Service>) DocList.getModel();

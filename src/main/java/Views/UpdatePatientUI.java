@@ -1,7 +1,7 @@
 package Views;
 
 import Controllers.ServiceController;
-import Models.Patient;
+import Models.PatientReport;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -25,7 +25,7 @@ public class UpdatePatientUI {
     private JButton resetButton;
     private JLabel txtAllergy;
 
-    public UpdatePatientUI(Patient patient, ServiceController s){
+    public UpdatePatientUI(PatientReport patientReport, ServiceController s){
         //setting object
         this.serviceController = s;
         // Initialize blood types once
@@ -36,7 +36,7 @@ public class UpdatePatientUI {
             }
         }
 
-        setPanel(patient);
+        setPanel(patientReport);
 
         resetButton.addActionListener(new ActionListener() {
             @Override
@@ -51,17 +51,17 @@ public class UpdatePatientUI {
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(patient != null){
-                    Patient updatedPatient = new Patient(
-                            patient.getGender(),
-                            patient.getAllergies(),
-                            patient.getPhoneNumber(),
-                            patient.getIllness(),
+                if(patientReport != null){
+                    PatientReport updatedPatientReport = new PatientReport(
+                            patientReport.getGender(),
+                            patientReport.getAllergies(),
+                            patientReport.getPhoneNumber(),
+                            patientReport.getIllness(),
                             (String) comboBoxblood.getSelectedItem(),
-                            patient.getPatientID()
+                            patientReport.getPatientID()
                     );
 
-                    boolean results = serviceController.service.updatePatientDetails(updatedPatient);
+                    boolean results = serviceController.service.updatePatientDetails(updatedPatientReport);
 
                     if (results) {
                         JOptionPane.showMessageDialog(ContentPane, "Patient details updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -76,9 +76,9 @@ public class UpdatePatientUI {
                     String illness = txtIllness.getText();
                     String blood = (String) comboBoxblood.getSelectedItem();
 
-                    Patient newPatient = new Patient(gender, allergy, phone, illness, blood,patient.getPatientID());
+                    PatientReport newPatientReport = new PatientReport(gender, allergy, phone, illness, blood, patientReport.getPatientID());
 
-                    boolean results = serviceController.service.addPatientDetails(newPatient);
+                    boolean results = serviceController.service.addPatientDetails(newPatientReport);
 
                     if (results) {
                         JOptionPane.showMessageDialog(ContentPane, "Patient details inserted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -89,14 +89,14 @@ public class UpdatePatientUI {
             }
         });
     }
-    private void setPanel(Patient patient) {
-        if (patient != null) {
+    private void setPanel(PatientReport patientReport) {
+        if (patientReport != null) {
             // Fill fields
-            txtGender.setText(patient.getGender());
-            txtallergies.setText(patient.getAllergies());
-            txtphone.setText(patient.getPhoneNumber());
-            txtIllness.setText(patient.getIllness());
-            comboBoxblood.setSelectedItem(patient.getBloodType());
+            txtGender.setText(patientReport.getGender());
+            txtallergies.setText(patientReport.getAllergies());
+            txtphone.setText(patientReport.getPhoneNumber());
+            txtIllness.setText(patientReport.getIllness());
+            comboBoxblood.setSelectedItem(patientReport.getBloodType());
         }
         else {
             return;

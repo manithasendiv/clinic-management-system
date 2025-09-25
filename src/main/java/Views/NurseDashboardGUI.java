@@ -1,15 +1,10 @@
 package Views;
 
-import Controllers.ServiceController;
-import Models.Patient;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.List;
 
 public class NurseDashboardGUI {
     private JPanel ViewPanel;

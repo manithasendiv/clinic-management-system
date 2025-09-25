@@ -1,7 +1,7 @@
 package Views;
 
 import Controllers.ServiceController;
-import Models.Patient;
+import Models.PatientReport;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -21,15 +21,15 @@ public class FileUploadPanel {
         return ContentPane;
     }
 
-    FileUploadPanel(Patient patient,ServiceController s){
+    FileUploadPanel(PatientReport patientReport, ServiceController s){
         //constructing object
         serviceController =s;
 
-        SetFileChooserPanel(patient.getPatientID());
+        SetFileChooserPanel(patientReport.getPatientID());
 
 
         //setting lbl for patient id
-        lblpatientID.setText(patient.getName());
+        lblpatientID.setText(patientReport.getName());
 
     }
     public void SetFileChooserPanel(int patientID) {

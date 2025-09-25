@@ -1,17 +1,14 @@
 package ServiceLayer;
 
 import DatabaseLayer.DatabaseConnection;
-import Models.Patient;
+import Models.PatientReport;
 import Models.Service;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 public class ServicesService {
     private DatabaseConnection singleConn;
@@ -20,23 +17,23 @@ public class ServicesService {
         singleConn =  DatabaseConnection.getSingleInstance();
     }
 
-    public List<Patient> getPatients(){
-        List<Patient> patientList = new ArrayList<>();
+    public List<PatientReport> getPatients(){
+        List<PatientReport> patientReportList = new ArrayList<>();
         try{
             String query1 = "SELECT * FROM patient";
             ResultSet resultSet = singleConn.executeSelectQuery(query1);
             while(resultSet.next()){
-                patientList.add(new Patient(resultSet.getInt("PatientID"),resultSet.getString("Name"),resultSet.getInt("Age"),resultSet.getString("PhoneNumber")));
+                patientReportList.add(new PatientReport(resultSet.getInt("PatientID"),resultSet.getString("Name"),resultSet.getInt("Age"),resultSet.getString("PhoneNumber")));
             }
         }catch (Exception ex){
             ex.printStackTrace();
         }
-        return patientList;
+        return patientReportList;
     }
 
 
-   public Patient getPatientDetails(int PatientID){
-        Patient patient = null;
+   public PatientReport getPatientDetails(int PatientID){
+        PatientReport patientReport = null;
         ResultSet rs = null;
         try{
            String query2 = "SELECT * FROM patient JOIN description ON patient.PatientID = description.PatientID WHERE patient.PatientID =?";
@@ -44,7 +41,7 @@ public class ServicesService {
             singleConn.preparedStatement.setInt(1, PatientID);
              rs = singleConn.ExecutePreparedStatement();
                 if(rs != null && rs.next()){
-                    patient = new Patient(
+                    patientReport = new PatientReport(
                             PatientID,
                             rs.getString("Name"),
                             rs.getInt("Age"),
@@ -69,7 +66,7 @@ public class ServicesService {
                 }
            }
         }
-      return patient;
+      return patientReport;
    }
 
 
@@ -228,12 +225,12 @@ public class ServicesService {
         return note;
     }
 
-    public boolean addPatientDetails(Patient patient){
+    public boolean addPatientDetails(PatientReport patientReport){
         try{
             String query = "INSERT INTO description (PatientID, Gender, Illness,Allergies,BloodType) VALUES ('"
-                    + patient.getPatientID() + "', '"
-                    + patient.getGender() + "', "
-                    + patient.getIllness() +"', "+patient.getAllergies()+"', "+patient.getBloodType()+ ")";
+                    + patientReport.getPatientID() + "', '"
+                    + patientReport.getGender() + "', "
+                    + patientReport.getIllness() +"', "+ patientReport.getAllergies()+"', "+ patientReport.getBloodType()+ ")";
 
             boolean result = singleConn.ExecuteSQL(query);
             return result;
@@ -243,14 +240,14 @@ public class ServicesService {
         }
     }
 
-    public boolean updatePatientDetails(Patient patient) {
+    public boolean updatePatientDetails(PatientReport patientReport) {
         try {
             String query = "UPDATE description SET "
-                    + "Gender = '" + patient.getGender() + "', "
-                    + "Illness = '" + patient.getIllness() + "', "
-                    + "Allergies = '" + patient.getAllergies() + "', "
-                    + "BloodType = '" + patient.getBloodType() + "' "
-                    + "WHERE PatientID = '" + patient.getPatientID() + "'";
+                    + "Gender = '" + patientReport.getGender() + "', "
+                    + "Illness = '" + patientReport.getIllness() + "', "
+                    + "Allergies = '" + patientReport.getAllergies() + "', "
+                    + "BloodType = '" + patientReport.getBloodType() + "' "
+                    + "WHERE PatientID = '" + patientReport.getPatientID() + "'";
 
             boolean result = singleConn.ExecuteSQL(query);
             return result;
