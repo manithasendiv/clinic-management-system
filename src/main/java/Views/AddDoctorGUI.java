@@ -3,6 +3,7 @@ package Views;
 import Controllers.DoctorController;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -59,5 +60,20 @@ public class AddDoctorGUI {
 
     public JPanel getAddDoctorGUI() {
         return BackPanel;
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+        CustomComponents.RoundedPanel panel = new CustomComponents.RoundedPanel(20);
+        panel.setBorderColor(Color.blue);
+        BackPanel = panel;
+
+        txtName = new CustomComponents.RoundedJTextField(20);
+        txtSpecialization = new CustomComponents.RoundedJTextField(20);
+        txtEmail = new CustomComponents.RoundedJTextField(20);
+        txtContact = new CustomComponents.RoundedJTextField(20);
+
+        btnAdd = new CustomComponents.CustomButton("Add Doctor");
+        btnAdd.setMinimumSize(new Dimension(200,35));
     }
 }

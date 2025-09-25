@@ -87,15 +87,4 @@ public class DatabaseConnection {
             System.out.println("Failed to close connection: " + e.getMessage());
         }
     }
-
-    public boolean isValidUser(String query) {
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery(query);
-            return rs.next();
-        } catch (SQLException e) {
-            System.out.println("SQL execution failed: " + e.getMessage());
-            return false;
-        }
-    }
 }

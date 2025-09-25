@@ -71,6 +71,10 @@ public class RegisterGUI {
         frame.setVisible(true);
     }
 
+    public JPanel getBackPanel() {
+        return backPanel;
+    }
+
     private void createUIComponents() {
         // TODO: place custom component creation code here
 

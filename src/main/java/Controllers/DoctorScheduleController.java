@@ -23,11 +23,11 @@ public class DoctorScheduleController {
         return ObjDoctorScheduleService.addDoctorSchedule(ObjDoctorSchedule);
     }
 
-    public boolean updateDoctorSchedule(DoctorSchedule doctorSchedule) {
-        return ObjDoctorScheduleService.updateDoctorSchedule(doctorSchedule);
+    public boolean updateDoctorSchedule(String scheduleID, String docName, String date, String time) {
+        return ObjDoctorScheduleService.updateDoctorSchedule(scheduleID, docName, date , time);
     }
 
-    public boolean removeDoctorSchedule(int sid) {
+    public boolean removeDoctorSchedule(String sid) {
         return ObjDoctorScheduleService.removeDoctorSchedule(sid);
     }
 

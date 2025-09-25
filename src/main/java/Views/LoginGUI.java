@@ -1,7 +1,13 @@
 package Views;
 
+import Controllers.LoginController;
+import Models.User;
+import ServiceLayer.LoginService;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class LoginGUI {
     private JTextField txtUsername;
@@ -13,8 +19,76 @@ public class LoginGUI {
     private JPanel headerPanel;
     private JPanel loginForm;
 
+    LoginController loginController;
+
     public LoginGUI() {
+
+        loginController = new LoginController();
         loginForm.setPreferredSize(new Dimension(400, 600));
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loginButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        String username = txtUsername.getText();
+                        char[] password = txtPassword.getPassword();
+                        String pass = new String(password);
+
+                        User loggedInUser = loginController.validateUser(username, pass);
+
+                        if (loggedInUser != null) {
+                            String role = loggedInUser.getRole();
+
+                            switch (role) {
+                                case "Receptionist":
+                                    JFrame homeFrame = new JFrame("HomeUI");
+                                    homeFrame.setContentPane(new ReceptionistDashboardUI().getDashboardUI());
+                                    homeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                                    homeFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                                    homeFrame.setUndecorated(true);
+                                    homeFrame.setVisible(true);
+                                    SwingUtilities.getWindowAncestor(backPanel).dispose();
+                                    break;
+
+                                case "Doctor":
+                                    JFrame doctorFrame = new JFrame("DoctorUI");
+                                    doctorFrame.setContentPane(new DoctorDashboardGUI().getDoctorDashboardUGI());
+                                    doctorFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                                    doctorFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                                    doctorFrame.setUndecorated(true);
+                                    doctorFrame.setVisible(true);
+                                    SwingUtilities.getWindowAncestor(backPanel).dispose();
+                                    break;
+
+                                case "Admin":
+                                    // TODO: open admin dashboard
+                                    break;
+
+                                default:
+                                    JOptionPane.showMessageDialog(null, "Login successful, but no role assigned.");
+                                    break;
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Invalid username or password. Please try again.");
+                        }
+                    }
+                });
+
+            }
+        });
+        createProfileButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame registerFrame = new JFrame("RegisterUI");
+                registerFrame.setContentPane(new RegisterGUI().getBackPanel());
+                registerFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                registerFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                registerFrame.setUndecorated(true);
+                registerFrame.setVisible(true);
+                SwingUtilities.getWindowAncestor(backPanel).dispose();
+            }
+        });
     }
 
     public static void main(String[] args) {
@@ -65,8 +139,6 @@ public class LoginGUI {
         };
 
         loginForm = new CustomComponents.RoundedPanel(30);
-
-
 
         ImageIcon logo = new ImageIcon("src/main/java/assets/logo.png");
         Image logoImage = logo.getImage();

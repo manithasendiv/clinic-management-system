@@ -2,6 +2,8 @@ package Views;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class ReceptionistDashboardUI {
     private JButton patientsButton;
@@ -21,6 +23,8 @@ public class ReceptionistDashboardUI {
         CardLayout cardLayout = new CardLayout();
         ViewPanel.setLayout(cardLayout);
 
+        ViewPanel.setMinimumSize(new Dimension(1200, 1000));
+
         logoArea.setOpaque(false);
         sidepanel1.setOpaque(false);
         LogoPanel.setOpaque(false);
@@ -28,62 +32,34 @@ public class ReceptionistDashboardUI {
 
         ViewPanel.setSize(600, 500);
 
-//        patientsButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                UpdateDoctorGUI addDoctorGUI = new UpdateDoctorGUI();
-//                ViewPanel.add(addDoctorGUI.getUpdateDoctorGUI(), "patientUI");
-//                cardLayout.show(ViewPanel, "patientUI");
-//            }
-//        });
-//
-//        doctorScheduleButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                ViewPanel.removeAll();
-//                DoctorScheduleUI doctorScheduleUI = new DoctorScheduleUI();
-//                ViewPanel.add(doctorScheduleUI.getDoctorScheduleUI(), "doctorScheduleUI");
-//                cardLayout.show(ViewPanel, "doctorScheduleUI");
-//            }
-//        });
-//
-//        newAppointmentButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                AppointmentUI appointmentUI = new AppointmentUI();
-//                ViewPanel.add(appointmentUI.getAppointmentUI(), "appointmentUI");
-//                cardLayout.show(ViewPanel, "appointmentUI");
-//            }
-//        });
-//
-//        reportsButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                ReportUI reportUI = new ReportUI();
-//                ViewPanel.add(reportUI.getReportUI(), "reportUI");
-//                cardLayout.show(ViewPanel, "reportUI");
-//            }
-//        });
-//
-//        signoutButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                LoginUI loginUI = new LoginUI();
-//                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(BackPanel);
-//                frame.setContentPane(loginUI.getLoginUI());
-//                frame.revalidate();
-//            }
-//        });
-
+        patientsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PatientGUI patientGUI = new PatientGUI();
+                ViewPanel.removeAll();
+                ViewPanel.add(patientGUI.getPatientGUI());
+                ViewPanel.revalidate();
+                ViewPanel.repaint();
+            }
+        });
+        doctorScheduleButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AddDoctorGUI addDoctorGUI = new AddDoctorGUI();
+                ViewPanel.removeAll();
+                ViewPanel.add(addDoctorGUI.getAddDoctorGUI());
+                ViewPanel.revalidate();
+                ViewPanel.repaint();
+            }
+        });
     }
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("CDC");
         frame.setContentPane(new ReceptionistDashboardUI().BackPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 550);
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        frame.setLocation(dim.width/2-frame.getSize().width/2, dim.height/2-frame.getSize().height/2);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setUndecorated(true);
         frame.setVisible(true);
     }
 

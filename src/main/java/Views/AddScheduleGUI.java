@@ -5,6 +5,7 @@ import Controllers.DoctorScheduleController;
 import Models.Doctor;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
@@ -87,13 +88,30 @@ public class AddScheduleGUI {
         });
     }
 
+    public JPanel getAddScheduleGUI() {
+        return backPanel;
+    }
+
     public static void main(String[] args) {
         JFrame frame = new JFrame("AddScheduleGUI");
         frame.setContentPane(new AddScheduleGUI().backPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500, 600);
+        frame.setSize(700, 600);
         frame.setVisible(true);
     }
 
 
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+        CustomComponents.RoundedPanel panel = new CustomComponents.RoundedPanel(20);
+        panel.setBorderColor(Color.blue);
+        backPanel = panel;
+
+        doctorNameComboBox = new CustomComponents.CustomComboBox();
+        txtAvailableDate = new CustomComponents.RoundedJTextField(20);
+        txtAvailableTime = new CustomComponents.RoundedJTextField(20);
+
+        addScheduleButton = new CustomComponents.CustomButton("Add Schedule");
+        addScheduleButton.setMinimumSize(new Dimension(400,35));
+    }
 }
