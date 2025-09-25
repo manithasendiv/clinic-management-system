@@ -34,7 +34,7 @@ public class SupplierUI {
 
     public SupplierUI() {
         supplierController = new SupplierController();
-
+        //dynamic table loads
         loadTable();
 
         // Add button
@@ -141,7 +141,7 @@ public class SupplierUI {
         });
     }
 
-
+//clear field
     private void clearFields() {
         txtID.setText("");
         txtName.setText("");

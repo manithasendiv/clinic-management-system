@@ -38,5 +38,5 @@ public class Supplier {
 
 
     public String getBankDetails() { return BankDetails; }
-
+/////supplier ui
 }
