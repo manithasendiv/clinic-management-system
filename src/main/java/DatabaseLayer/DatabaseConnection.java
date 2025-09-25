@@ -1,6 +1,4 @@
-
 package DatabaseLayer;
-
 
 import java.sql.*;
 
@@ -86,15 +84,6 @@ public class DatabaseConnection {
             }
         } catch (SQLException e) {
             System.out.println("Failed to close connection: " + e.getMessage());
-        }
-    }
-    public ResultSet executeSelectQuery(String sqlQ) {
-        try {
-            Statement st = connection.createStatement();
-            return st.executeQuery(sqlQ); // Returns the result set
-        } catch (SQLException ex) {
-            System.out.println("SQL Error: " + ex.getMessage());
-            return null;
         }
     }
 }
