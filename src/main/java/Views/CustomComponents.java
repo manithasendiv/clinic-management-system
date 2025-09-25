@@ -4,6 +4,8 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.plaf.basic.BasicScrollBarUI;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -377,6 +379,36 @@ public class CustomComponents {
         protected void paintTrack(Graphics g, JComponent c, Rectangle trackBounds) {
             g.setColor(trackColor);
             g.fillRect(trackBounds.x, trackBounds.y, trackBounds.width, trackBounds.height);
+        }
+    }
+
+    public static class CustomJTable extends JTable {
+        public CustomJTable(DefaultTableModel model) {
+            super(model);
+
+            // General styling
+            setFillsViewportHeight(true);
+            setRowHeight(28);
+            setShowHorizontalLines(true);     // Enable horizontal row dividers
+            setShowVerticalLines(false);      // Disable vertical lines
+            setGridColor(new Color(220, 220, 220)); // Light gray divider
+            setIntercellSpacing(new Dimension(0, 1)); // Space for row line
+            setSelectionBackground(new Color(102, 178, 255));
+            setSelectionForeground(Color.BLACK);
+            setFont(new Font("Segoe UI", Font.PLAIN, 13));
+
+            // Header styling
+            getTableHeader().setReorderingAllowed(false);
+            getTableHeader().setBackground(new Color(70, 130, 180));
+            getTableHeader().setForeground(Color.WHITE);
+            getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+
+            // Center align all cells
+            DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+            centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+            for (int i = 0; i < getColumnCount(); i++) {
+                getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+            }
         }
     }
 }

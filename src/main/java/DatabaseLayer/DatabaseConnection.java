@@ -78,6 +78,16 @@ public class DatabaseConnection {
         return connection;
     }
 
+    public ResultSet executeSelectQuery(String sqlQ) {
+        try {
+            Statement st = connection.createStatement();
+            return st.executeQuery(sqlQ); // Returns the result set
+        } catch (SQLException ex) {
+            System.out.println("SQL Error: " + ex.getMessage());
+            return null;
+        }
+    }
+
     public void closeConnection() {
         try {
             if (connection != null && !connection.isClosed()) {

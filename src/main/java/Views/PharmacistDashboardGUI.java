@@ -32,7 +32,11 @@ public class PharmacistDashboardGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // chenura
-
+                PharmacyInventoryView pharmacyInventoryViewGUI = new PharmacyInventoryView();
+                ViewPanel.removeAll();
+                ViewPanel.add(pharmacyInventoryViewGUI.getPanel());
+                ViewPanel.revalidate();
+                ViewPanel.repaint();
             }
         });
 
