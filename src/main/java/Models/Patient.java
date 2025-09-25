@@ -2,111 +2,48 @@ package Models;
 
 public class Patient {
     private int patientID;
-    private String name;
-    private int age;
-    private String PhoneNumber;
-    private String gender;
-    private String regDate;
-    private String illness;
-    private String bloodType;
-    private String allergies;
+    private String Name;
+    private int Age;
+    private String Address;
+    private int Contact;
+    private String Email;
+    private String Selected_Doctor;
 
-    public Patient(String gender, String illness, String bloodType, String allergies, String blood, int patientID) {
-        this.gender = gender;
-        this.illness = illness;
-        this.bloodType = bloodType;
-        this.allergies = allergies;
+    public Patient(int patientID, String name, int age, String address, int contact, String email, String selected_Doctor) {
         this.patientID = patientID;
-    }
-
-    public Patient(int patientID, String name, int age, String phoneNumber) {
-        this.patientID = patientID;
-        this.name = name;
-        this.age = age;
-        PhoneNumber = phoneNumber;
-    }
-
-    public Patient(int patientID, String name, int age, String phoneNumber, String gender, String regDate, String illness, String bloodType, String allergies) {
-        this.patientID = patientID;
-        this.name = name;
-        this.age = age;
-        PhoneNumber = phoneNumber;
-        this.gender = gender;
-        this.regDate = regDate;
-        this.illness = illness;
-        this.bloodType = bloodType;
-        this.allergies = allergies;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getRegDate() {
-        return regDate;
-    }
-
-    public void setRegDate(String regDate) {
-        this.regDate = regDate;
-    }
-
-    public String getIllness() {
-        return illness;
-    }
-
-    public void setIllness(String illness) {
-        this.illness = illness;
-    }
-
-    public String getBloodType() {
-        return bloodType;
-    }
-
-    public void setBloodType(String bloodType) {
-        this.bloodType = bloodType;
-    }
-
-    public String getAllergies() {
-        return allergies;
-    }
-
-    public void setAllergies(String allergies) {
-        this.allergies = allergies;
+        Name = name;
+        Age = age;
+        Address = address;
+        Contact = contact;
+        Email = email;
+        Selected_Doctor = selected_Doctor;
     }
 
     public int getPatientID() {
         return patientID;
     }
 
-    public void setPatientID(int patientID) {
-        this.patientID = patientID;
-    }
-
     public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+        return Name;
     }
 
     public int getAge() {
-        return age;
+        return Age;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public String getAddress() {
+        return Address;
     }
 
-    public String getPhoneNumber() {
-        return PhoneNumber;
+    public int getContact() {
+        return Contact;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        PhoneNumber = phoneNumber;
+    public String getEmail() {
+        return Email;
+    }
+
+    public String getSelected_Doctor() {
+        return Selected_Doctor;
     }
 }

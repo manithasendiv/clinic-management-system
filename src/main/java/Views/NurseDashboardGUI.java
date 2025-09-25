@@ -1,15 +1,9 @@
 package Views;
 
-import Controllers.ServiceController;
-import Models.Patient;
-import com.formdev.flatlaf.FlatLightLaf;
-
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class NurseDashboardGUI {
     private JPanel ViewPanel;
@@ -23,14 +17,11 @@ public class NurseDashboardGUI {
     private JPanel LogoPanel;
     private JButton btnBillManagement;
     private JButton btnServiceEntries;
-    private JPanel MainStage;
-
 
     public NurseDashboardGUI(){
-    /*
         CardLayout cardLayout = new CardLayout();
         ViewPanel.setLayout(cardLayout);
-        ViewPanel.setMinimumSize(new Dimension(400, 1000));*/
+        ViewPanel.setMinimumSize(new Dimension(400, 1000));
 
         logoArea.setOpaque(false);
         sidepanel1.setOpaque(false);
@@ -40,49 +31,26 @@ public class NurseDashboardGUI {
         btnServiceEntries.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ServiceUI serviceUI = new ServiceUI();
-                ViewPanel.removeAll();
-                ViewPanel.add(serviceUI.getMainPanel());
-                ViewPanel.revalidate();
-                ViewPanel.repaint();
+                // chenura
+
             }
         });
 
         btnBillManagement.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                BillDashbord billDashbord = new BillDashbord();
-                ViewPanel.removeAll();
-                ViewPanel.add(billDashbord.getContentPane());
-                ViewPanel.revalidate();
-                ViewPanel.repaint();
+                // menura
             }
         });
     }
 
     public static void main(String[] args) {
-
-
-        UIManager.put("ScrollBar.trackInsets", new Insets(2, 4, 2, 4));
-        UIManager.put("ScrollBar.thumbInsets", new Insets(2, 2, 2, 2));
-        UIManager.put("ScrollBar.track", new Color(0xe0e0e0));
-        //UIManager.put( "Component.focusWidth", 1 );
-        //flatlaf dependency execution code
-        try {
-            UIManager.setLookAndFeel( new FlatLightLaf() );
-        } catch( Exception ex ) {
-            System.err.println( "Failed to initialize LaF" );
-        }
-
-
         JFrame frame = new JFrame("CDC");
-
         frame.setContentPane(new NurseDashboardGUI().BackPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        //frame.setUndecorated(true);
+        frame.setUndecorated(true);
         frame.setVisible(true);
-
     }
 
     private void createUIComponents(){
