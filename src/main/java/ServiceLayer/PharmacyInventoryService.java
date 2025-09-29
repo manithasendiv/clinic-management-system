@@ -102,4 +102,26 @@ public class PharmacyInventoryService {
             return false;
         }
     }
+
+    //Report generate
+
+    public List<String> getItemQuantitiesReport() {
+        List<String> report = new ArrayList<>();
+        String sql = "SELECT ItemName, Quantity FROM pharmacy_inventory";
+
+        try (Connection conn = DatabaseConnection.getSingleInstance().getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                String itemName = rs.getString("ItemName");
+                int quantity = rs.getInt("Quantity");
+                report.add(itemName + " - " + quantity + " left");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return report;
+    }
+
 }
