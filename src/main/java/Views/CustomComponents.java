@@ -194,7 +194,7 @@ public class   CustomComponents {
     static class RoundedPanel extends JPanel {
         private int cornerRadius;
         private Color borderColor = Color.BLACK; // default
-        private int borderThickness = 3; // default thickness
+        private int borderThickness = 1; // default thickness
 
         public RoundedPanel(int radius) {
             super();
@@ -413,6 +413,46 @@ public class   CustomComponents {
         }
     }
 
+    static public class CustomTableServiceUI extends JTable {
+
+        public CustomTableServiceUI(DefaultTableModel model) {
+            super(model);
+            setRowHeight(50);
+            setFillsViewportHeight(true);
+            setDefaultRenderer(Object.class, new CustomCellRenderer());
+            //setSelectionBackground(new java.awt.Color(51, 78, 172)); // blue hover
+            setSelectionBackground(new java.awt.Color(22, 37, 84, 255));
+            setSelectionForeground(new java.awt.Color(255, 255, 255, 255));
+            setIntercellSpacing(new java.awt.Dimension(0, 0));
+            setAutoCreateRowSorter(true);
+        }
+
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false; // Prevent editing
+        }
+
+        static class CustomCellRenderer extends DefaultTableCellRenderer {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                                                           boolean isSelected, boolean hasFocus,
+                                                           int row, int column) {
+                super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+                if (isSelected) {
+                    setBackground(table.getSelectionBackground());
+                    setForeground(table.getSelectionForeground());
+                } else {
+                    setBackground(row % 2 == 0 ? Color.WHITE : new Color(245, 245, 245));
+                    setForeground(Color.BLACK);
+                }
+
+                setHorizontalAlignment(CENTER);
+                setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(200, 200, 200)));
+                return this;
+            }
+        }
+    }
 
 
 }

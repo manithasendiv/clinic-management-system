@@ -40,9 +40,15 @@ public class PharmacistDashboardGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // menura
+                /*
                 SupplierUI supplierUI = new SupplierUI();
                 ViewPanel.removeAll();
                 ViewPanel.add(supplierUI.getBackPanelSupplier());
+                ViewPanel.revalidate();
+                ViewPanel.repaint();*/
+                SupplierManagementUI supplierManagementUI = new SupplierManagementUI();
+                ViewPanel.removeAll();
+                ViewPanel.add(supplierManagementUI.getMainPanel());
                 ViewPanel.revalidate();
                 ViewPanel.repaint();
             }
