@@ -9,13 +9,15 @@ public class Bill {
     private List<PharmacyItem> pharmacyItems;
     private double total;
     private double discount;
+    private String billPath;
 
-    public Bill(double discount, String service, int patientId, String billId, double total) {
+    public Bill(double discount, String service, int patientId, String billId, double total,String billPath) {
         this.discount = discount;
         this.service = service;
         this.patientId = patientId;
         this.billId = billId;
         this.total = total;
+        this.billPath = billPath;
     }
 
     public Bill(String billId, int patientId, String service, List<PharmacyItem> pharmacyItems, double total, double discount) {
@@ -34,7 +36,13 @@ public class Bill {
         this.service = service;
         this.patientId = patientId;
     }
+    public String getBillPath() {
+        return billPath;
+    }
 
+    public void setBillPath(String billPath) {
+        this.billPath = billPath;
+    }
     public String getBillId() { return billId; }
     public int getPatientId() { return patientId; }
     public String getService() { return service; }

@@ -34,13 +34,14 @@ public class ServicesService {
         return patientList;
     }
 
-
    public Patient getPatientDetails(int PatientID){
         Patient patient = null;
         ResultSet rs = null;
         try{
-           String query2 = "SELECT * FROM patient JOIN description ON patient.PatientID = description.PatientID WHERE patient.PatientID =?";
-            singleConn.setPreparedStatement(query2);
+            String query = "SELECT * FROM patient " +
+                    "LEFT JOIN description ON patient.PatientID = description.PatientID " +
+                    "WHERE patient.PatientID = ?";
+            singleConn.setPreparedStatement(query);
             singleConn.preparedStatement.setInt(1, PatientID);
              rs = singleConn.ExecutePreparedStatement();
                 if(rs != null && rs.next()){
@@ -138,8 +139,8 @@ public class ServicesService {
             return serviceList;
         } catch (RuntimeException | SQLException e) {
             System.out.println(e.getMessage());
-            return null;
         }
+        return null;
     }
 
     public ArrayList<Service> getNotes(int id){
@@ -228,20 +229,24 @@ public class ServicesService {
         return note;
     }
 
-    public boolean addPatientDetails(Patient patient){
-        try{
-            String query = "INSERT INTO description (PatientID, Gender, Illness,Allergies,BloodType) VALUES ('"
-                    + patient.getPatientID() + "', '"
-                    + patient.getGender() + "', "
-                    + patient.getIllness() +"', "+patient.getAllergies()+"', "+patient.getBloodType()+ ")";
+    public boolean addPatientDetails(Patient patient) {
+        String query = "INSERT INTO description (PatientID, Gender, Illness, Allergies, BloodType) " +
+                "VALUES (?, ?, ?, ?, ?)";
+        try {
+            singleConn.setPreparedStatement(query);
+            singleConn.preparedStatement.setInt(1, patient.getPatientID());
+            singleConn.preparedStatement.setString(2, patient.getGender());
+            singleConn.preparedStatement.setString(3, patient.getIllness());
+            singleConn.preparedStatement.setString(4, patient.getAllergies());
+            singleConn.preparedStatement.setString(5, patient.getBloodType());
 
-            boolean result = singleConn.ExecuteSQL(query);
-            return result;
-        }catch (Exception ex){
-            System.out.println("Cannot Insert a Service: " + ex.getMessage());
+            return singleConn.preparedStatement.executeUpdate() > 0;
+        } catch (Exception ex) {
+            System.out.println("Cannot Insert a description: " + ex.getMessage());
             return false;
         }
     }
+
 
     public boolean updatePatientDetails(Patient patient) {
         try {
@@ -260,6 +265,55 @@ public class ServicesService {
         }
     }
 
+    public boolean checkDescription(int patientID) {
+        String query = "SELECT 1 FROM description WHERE patientID = ? LIMIT 1";
+        try {
+            singleConn.setPreparedStatement(query);
+            singleConn.preparedStatement.setInt(1, patientID);
 
+            try (ResultSet rs = singleConn.ExecutePreparedStatement()) {
+                return rs != null && rs.next(); // true if at least one row found
+            }
+        } catch (Exception e) {
+            System.out.println("Error checking description: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public Patient searchPatient(String keyword) {
+        Patient patient = null;
+        ResultSet rs = null;
+
+        String query = "SELECT PatientID, Name, PhoneNumber FROM patient " +
+                "WHERE Name LIKE ? OR CAST(PatientID AS CHAR) LIKE ? LIMIT 1";
+
+        try {
+            singleConn.setPreparedStatement(query);
+            singleConn.preparedStatement.setString(1, "%" + keyword + "%");
+            singleConn.preparedStatement.setString(2, "%" + keyword + "%");
+
+            rs = singleConn.ExecutePreparedStatement();
+
+            if (rs != null && rs.next()) {
+                patient = new Patient(
+                        rs.getInt("PatientID"),
+                        rs.getString("Name"),
+                        rs.getString("PhoneNumber")
+                );
+            }
+        } catch (Exception ex) {
+            System.out.println("Error during search: " + ex.getMessage());
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    System.err.println("Error closing result set: " + e.getMessage());
+                }
+            }
+        }
+
+        return patient; // null if nothing found
+    }
 
 }

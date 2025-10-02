@@ -58,6 +58,16 @@ public class NurseDashboardGUI {
                 ViewPanel.repaint();
             }
         });
+        reportsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ReportNurseUI reportNurseUI = new ReportNurseUI();
+                ViewPanel.removeAll();
+                ViewPanel.add(reportNurseUI.getBackPanel());
+                ViewPanel.revalidate();
+                ViewPanel.repaint();
+            }
+        });
     }
 
     public static void main(String[] args) {

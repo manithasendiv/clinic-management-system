@@ -11,11 +11,12 @@ public class Patient {
     private String bloodType;
     private String allergies;
 
-    public Patient(String gender, String illness, String bloodType, String allergies, String blood, int patientID) {
+    public Patient(String gender, String allergies, String phoneNumber,String illness, String blood, int patientID) {
         this.gender = gender;
         this.illness = illness;
-        this.bloodType = bloodType;
+        this.PhoneNumber = phoneNumber;
         this.allergies = allergies;
+        this.bloodType = blood;
         this.patientID = patientID;
     }
 
@@ -24,6 +25,11 @@ public class Patient {
         this.name = name;
         this.age = age;
         PhoneNumber = phoneNumber;
+    }
+    public Patient(int patientID, String name, String PhoneNumber) {
+        this.patientID = patientID;
+        this.name = name;
+        this.PhoneNumber = PhoneNumber;
     }
 
     public Patient(int patientID, String name, int age, String phoneNumber, String gender, String regDate, String illness, String bloodType, String allergies) {

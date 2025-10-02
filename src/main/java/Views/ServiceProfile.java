@@ -49,6 +49,7 @@ public class ServiceProfile {
     private int selectedRow =-1;
     private JLabel btnLblBack;
 
+    Patient patient;
     // Return Main panel
     public JPanel getMainPanel() {
         return contentPane;
@@ -63,10 +64,11 @@ public class ServiceProfile {
     ArrayList<Service> documentList;
 
     //Constructor for Service UI
-    ServiceProfile(Patient patient,ServiceController s){
+    ServiceProfile(int patientid,ServiceController s){
         //Constructing object
         this.serviceController =s;
 
+        patient =this.serviceController.service.getPatientDetails(patientid);
         //Method Calls For Setting Panels
         SetTopPanel(patient);
         SetDocumentPanel(patient);
@@ -97,7 +99,7 @@ public class ServiceProfile {
                 frame.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                        refreshDocumentList(patient); // refresh the list
+                        refreshDocumentList(patient.getPatientID()); // refresh the list
                     }
                 });
             }
@@ -165,7 +167,7 @@ public class ServiceProfile {
                         return;
                     }
                 } catch (RuntimeException ex) {
-                    throw new RuntimeException(ex);
+                    System.out.println(ex.getMessage());
                 }
             }
         });
@@ -219,6 +221,13 @@ public class ServiceProfile {
                 frame.pack();
                 frame.setLocationRelativeTo(null);
                 frame.setVisible(true);
+                frame.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                        patient = serviceController.service.getPatientDetails(patient.getPatientID());
+                        SetTopPanel(patient);
+                    }
+                });
             }
         });
     }
@@ -256,7 +265,7 @@ public class ServiceProfile {
             assert lblAllergies != null;
             lblAllergies.setText(patient.getAllergies());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
 
     }
@@ -303,7 +312,7 @@ public class ServiceProfile {
         });
 
         //dynamic loader call
-        refreshDocumentList(patient);
+        refreshDocumentList(patient.getPatientID());
 
     }
     private void SetServicePanel(Patient patient){
@@ -422,8 +431,8 @@ public class ServiceProfile {
 
     }
 
-    private void refreshDocumentList(Patient patient) {
-        documentList = serviceController.service.getDocuments(patient.getPatientID());
+    private void refreshDocumentList(int patientid) {
+        documentList = serviceController.service.getDocuments(patientid);
         if (documentList == null) return;
 
         DefaultListModel<Service> model = (DefaultListModel<Service>) DocList.getModel();

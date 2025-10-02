@@ -6,6 +6,7 @@ import Models.Patient;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Objects;
 
 public class UpdatePatientUI {
     private JTextField txtGender;
@@ -16,6 +17,7 @@ public class UpdatePatientUI {
     private JButton saveButton;
 
     ServiceController serviceController;
+
 
     public JPanel getContentPane() {
         return ContentPane;
@@ -51,34 +53,35 @@ public class UpdatePatientUI {
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(patient != null){
-                    Patient updatedPatient = new Patient(
-                            patient.getGender(),
-                            patient.getAllergies(),
-                            patient.getPhoneNumber(),
-                            patient.getIllness(),
-                            (String) comboBoxblood.getSelectedItem(),
-                            patient.getPatientID()
-                    );
+                String gender = txtGender.getText().trim();
+                String allergy = txtallergies.getText().trim();
+                String phone = txtphone.getText().trim();
+                String illness = txtIllness.getText().trim();
+                String blood = (String) comboBoxblood.getSelectedItem();
+                boolean setDec = serviceController.service.checkDescription(patient.getPatientID());
+                // Basic validation
+                if (gender.isEmpty() || allergy.isEmpty() || phone.isEmpty() || illness.isEmpty() || blood == null || blood.isEmpty()) {
+                    JOptionPane.showMessageDialog(ContentPane, "Please fill in all fields before saving.", "Validation Error", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
 
-                    boolean results = serviceController.service.updatePatientDetails(updatedPatient);
+                // Create patient object
+                Patient patientObj = new Patient(gender, allergy, phone, illness, blood, patient.getPatientID());
+
+                boolean results;
+
+                if (setDec) {
+                    // UPDATE
+                    results = serviceController.service.updatePatientDetails(patientObj);
 
                     if (results) {
                         JOptionPane.showMessageDialog(ContentPane, "Patient details updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                     } else {
                         JOptionPane.showMessageDialog(ContentPane, "Failed to update patient details.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                }else{
-                    // Insert new patient
-                    String gender = txtGender.getText();
-                    String allergy = txtallergies.getText();
-                    String phone = txtphone.getText();
-                    String illness = txtIllness.getText();
-                    String blood = (String) comboBoxblood.getSelectedItem();
-
-                    Patient newPatient = new Patient(gender, allergy, phone, illness, blood,patient.getPatientID());
-
-                    boolean results = serviceController.service.addPatientDetails(newPatient);
+                } else {
+                    //  INSERT
+                    results = serviceController.service.addPatientDetails(patientObj);
 
                     if (results) {
                         JOptionPane.showMessageDialog(ContentPane, "Patient details inserted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);

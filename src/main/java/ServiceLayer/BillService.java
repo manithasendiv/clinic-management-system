@@ -17,11 +17,13 @@ public class BillService {
 
     public boolean addBill(Bill bill) {
         try {
-            String query = "INSERT INTO Bill(patient_id, total, discount,service) VALUES ('"
+            String query = "INSERT INTO Bill(bill_id,patient_id, total, discount,service,billPath) VALUES ('"
+                    + bill.getBillId() + "','"
                     + bill.getPatientId() + "','"
                     + bill.getTotal() + "','"
                     + bill.getDiscount() +"','"
-                    + bill.getService()+ "')";
+                    + bill.getService()+ "','"
+                    + bill.getBillPath()+ "')";
 
             return singleConnection.ExecuteSQL(query);
         } catch (Exception e) {

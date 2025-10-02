@@ -22,7 +22,6 @@ public class ServiceUI {
     private JTable PatientsList;
     private JScrollPane scrollPane;
     ServiceController serviceController;
-    Patient patient;
     private int selectedRow =-1;
     private TableRowSorter<DefaultTableModel> sorter;
 
@@ -53,11 +52,9 @@ public class ServiceUI {
                 int row =  PatientsList.getSelectedRow();
                 if(row >=0){
                     selectedRow =  Integer.parseInt(PatientsList.getValueAt(row, 0).toString());
-                    patient=serviceController.service.getPatientDetails(selectedRow);
-                    System.out.println(patient);
                     mainPanel.removeAll();
                     mainPanel.setLayout(new BorderLayout());
-                    ServiceProfile s = new ServiceProfile(patient,serviceController);
+                    ServiceProfile s = new ServiceProfile(selectedRow,serviceController);
 
                     mainPanel.add(s.getMainPanel(), BorderLayout.CENTER);
                     mainPanel.revalidate();

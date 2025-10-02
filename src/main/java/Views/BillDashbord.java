@@ -5,16 +5,20 @@ import Controllers.ServiceController;
 import Models.Bill;
 import Models.Patient;
 import Models.PharmacyItem;
+import org.apache.poi.xwpf.usermodel.*;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 import java.util.List;
 
 public class BillDashbord {
@@ -66,16 +70,20 @@ public class BillDashbord {
     }
 
     public BillDashbord() {
-
         this.billController = new BillController();
         serviceController = new ServiceController();
         itemList = new ArrayList<>();
+
+        ImageIcon logo = new ImageIcon("src/main/java/Assets/logo.png");
+        Image logoImage = logo.getImage();
+        Image newLogo = logoImage.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+        logo = new ImageIcon(newLogo);
+        logoicon.setIcon(logo);
 
         Billtable.setModel(new DefaultTableModel(
                 new Object[][]{},
                 new String[]{"Item", "Price", "Qty", "Subtotal"}
         ));
-
 
         String[] headers = {"PatientID", "Name", "Age", "PhoneNumber"};
         PatientList.setModel(new DefaultTableModel(new Object[][]{}, headers));
@@ -121,7 +129,7 @@ public class BillDashbord {
         ));
 
         txtdiscount.getDocument().addDocumentListener(new SimpleDocListener(() ->
-                lbldiscount.setText("Discount: Rs. " + txtdiscount.getText())
+                lbldiscount.setText(" Rs. " + txtdiscount.getText())
         ));
     }
 
@@ -157,11 +165,9 @@ public class BillDashbord {
         lblname.setText(patient.getName());
     }
 
-    public static String generateInvoiceId() {
-        String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
-        String countStr = String.format("%03d", counter);
-        counter++;
-        return "INV" + date + "-" + countStr;
+    private String generateInvoiceId() {
+        String timestamp = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
+        return "INV" + timestamp;
     }
 
     private void addItemToBill() {
@@ -201,30 +207,54 @@ public class BillDashbord {
             JOptionPane.showMessageDialog(null, "Please select a patient first.");
             return;
         }
+
+        if (itemList.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please add at least one item to the bill.");
+            return;
+        }
+
         try {
             String service = txtservice.getText();
-            double discount = txtdiscount.getText().isEmpty() ? 0.0 : Double.parseDouble(txtdiscount.getText());
+            if (service.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please enter a service description.");
+                return;
+            }
 
+            double discount = txtdiscount.getText().isEmpty() ? 0.0 : Double.parseDouble(txtdiscount.getText());
             double total = itemList.stream()
                     .mapToDouble(p -> p.getPrice() * p.getQuantity())
                     .sum();
-
             total -= discount;
 
-            lbltotalprice.setText("Total: Rs. " + String.format("%.2f", total));
-
+            lbltotalprice.setText(" Rs. " + String.format("%.2f", total));
             String invoiceId = lblinvoiceID.getText();
 
-            Bill bill = new Bill(discount, service, patient.getPatientID(), invoiceId, total);
-            boolean success = billController.objBillService.addBill(bill);
+            // Generate Word document first to get file path
+            String filePath = generateInvoiceDocument(invoiceId, patient, itemList, service, discount, total);
 
-            if (success) {
-                for (PharmacyItem p : itemList) {
-                    billController.objBillService.addPharmacyItem(p, invoiceId);
+            if (filePath != null) {
+                // Create bill with file path
+                Bill bill = new Bill(discount, service, patient.getPatientID(), invoiceId, total, filePath);
+                bill.setPharmacyItems(new ArrayList<>(itemList));
+
+                boolean success = billController.objBillService.addBill(bill);
+
+                if (success) {
+                    for (PharmacyItem p : itemList) {
+                        billController.objBillService.addPharmacyItem(p, invoiceId);
+                    }
+
+                    JOptionPane.showMessageDialog(null,
+                            "Bill generated successfully!\nInvoice ID: " + invoiceId);
+
+                    // Clear form for next bill
+                    clearBillForm();
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "Failed to save bill to database.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
-                JOptionPane.showMessageDialog(null, "Bill generated successfully!\nInvoice ID: " + invoiceId);
             } else {
-                JOptionPane.showMessageDialog(null, "Failed to generate bill.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Failed to generate invoice document.", "Error", JOptionPane.ERROR_MESSAGE);
             }
 
         } catch (NumberFormatException ex) {
@@ -232,6 +262,156 @@ public class BillDashbord {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "An error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    private String generateInvoiceDocument(String invoiceId, Patient patient, List<PharmacyItem> items,
+                                           String service, double discount, double total) {
+        try (FileInputStream fis = new FileInputStream("src/main/java/Assets/Invoice_template.docx");
+             XWPFDocument document = new XWPFDocument(fis)) {
+
+            // Calculate subtotal
+            double subtotal = items.stream()
+                    .mapToDouble(item -> item.getPrice() * item.getQuantity())
+                    .sum();
+
+            // 1️⃣ Replace basic placeholders
+            Map<String, String> replacements = new HashMap<>();
+            replacements.put("{{InvoiceID}}", invoiceId);
+            replacements.put("{{CurrentDate}}", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+            replacements.put("{{PatientID}}", String.valueOf(patient.getPatientID()));
+            replacements.put("{{PatientName}}", patient.getName());
+            replacements.put("{{Service}}", service);
+            replacements.put("{{Subtotal}}", String.format("Rs. %.2f", subtotal));
+            replacements.put("{{Discount}}", String.format("Rs. %.2f", discount));
+            replacements.put("{{Total}}", String.format("Rs. %.2f", total));
+
+            // Replace in paragraphs
+            for (XWPFParagraph p : document.getParagraphs()) {
+                String text = p.getText();
+                if (text != null) {
+                    String replaced = text;
+                    for (Map.Entry<String, String> entry : replacements.entrySet()) {
+                        replaced = replaced.replace(entry.getKey(), entry.getValue());
+                    }
+
+                    if (!replaced.equals(text)) {
+                        // Clear old runs
+                        for (int i = p.getRuns().size() - 1; i >= 0; i--) {
+                            p.removeRun(i);
+                        }
+                        // Insert updated text
+                        p.createRun().setText(replaced, 0);
+                    }
+                }
+            }
+
+
+            // 2️⃣ Fill bill items table
+            for (XWPFTable table : document.getTables()) {
+                for (XWPFTableRow row : table.getRows()) {
+                    for (XWPFTableCell cell : row.getTableCells()) {
+                        if (cell.getText().contains("{{item_name}}")) {
+                            XWPFTableRow templateRow = row;
+
+                            // Clear placeholder row content
+                            for (XWPFTableCell c : templateRow.getTableCells()) {
+                                for (XWPFParagraph p : c.getParagraphs()) {
+                                    for (XWPFRun r : p.getRuns()) {
+                                        r.setText("", 0);
+                                    }
+                                }
+                            }
+
+                            // Add rows for each pharmacy item
+                            for (PharmacyItem item : items) {
+                                XWPFTableRow newRow = table.createRow();
+
+                                // Item name
+                                setCellText(newRow.getCell(0), item.getName());
+
+                                // Price
+                                setCellText(newRow.getCell(1), String.format("Rs. %.2f", item.getPrice()));
+
+                                // Quantity
+                                setCellText(newRow.getCell(2), String.valueOf(item.getQuantity()));
+
+                                // Subtotal
+                                double itemSubtotal = item.getPrice() * item.getQuantity();
+                                setCellText(newRow.getCell(3), String.format("Rs. %.2f", itemSubtotal));
+                            }
+
+                            // Remove the template row
+                            int rowIndex = table.getRows().indexOf(templateRow);
+                            if (rowIndex >= 0) {
+                                table.removeRow(rowIndex);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // 3️⃣ Save the invoice
+            File invoiceDir = new File("src/main/java/Assets/Invoices");
+            if (!invoiceDir.exists()) {
+                invoiceDir.mkdirs();
+            }
+
+            String fileName = "Invoice_" + invoiceId + ".docx";
+            File invoiceFile = new File(invoiceDir, fileName);
+            String filePath = invoiceFile.getAbsolutePath();
+
+            try (FileOutputStream fos = new FileOutputStream(invoiceFile)) {
+                document.write(fos);
+            }
+
+            System.out.println("Invoice generated successfully: " + filePath);
+
+            // Optional: Open the file automatically
+//            if (Desktop.isDesktopSupported()) {
+//                Desktop.getDesktop().open(invoiceFile);
+//            }
+
+            return filePath;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null,
+                    "Failed to generate invoice document: " + e.getMessage(),
+                    "Document Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+    }
+
+    // Helper method to set cell text
+    private void setCellText(XWPFTableCell cell, String text) {
+        if (cell != null) {
+            // Clear existing content
+            for (XWPFParagraph p : cell.getParagraphs()) {
+                for (XWPFRun r : p.getRuns()) {
+                    r.setText("", 0);
+                }
+            }
+            // Set new text
+            cell.setText(text);
+        }
+    }
+
+    private void clearBillForm() {
+        // Clear bill items
+        DefaultTableModel model = (DefaultTableModel) Billtable.getModel();
+        model.setRowCount(0);
+        itemList.clear();
+
+        // Clear input fields
+        txtservice.setText("");
+        txtdiscount.setText("");
+        lbltotalprice.setText(" Rs. 0.00");
+        lbldiscount.setText(" Rs. 0");
+
+        // Generate new invoice ID
+        lblinvoiceID.setText(generateInvoiceId());
     }
 
     private void createUIComponents() {
@@ -252,12 +432,10 @@ public class BillDashbord {
     }
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Service UI");
+        JFrame frame = new JFrame("Bill Dashboard");
         frame.setContentPane(new BillDashbord().mainPane);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
-
         frame.setVisible(true);
-
     }
 }
