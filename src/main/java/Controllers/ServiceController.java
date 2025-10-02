@@ -1,10 +1,7 @@
 package Controllers;
 
-import Models.Patient;
 import Models.Service;
 import ServiceLayer.ServicesService;
-
-import java.io.File;
 
 public class ServiceController {
         Service serviceObj;
