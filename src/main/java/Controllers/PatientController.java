@@ -3,6 +3,8 @@ package Controllers;
 import Models.Patient;
 import ServiceLayer.PatientService;
 
+import javax.xml.transform.Result;
+import java.sql.ResultSet;
 import java.sql.Time;
 import java.util.Date;
 
@@ -14,8 +16,8 @@ public class PatientController {
         ObjPatientService = new PatientService();
     }
 
-    public Patient addPatient(int patientID, String Name, int Age, String Address, int Contact, String Email,String Selected_Doctor, String Date, String Time ) {
-        ObjPatient = new Patient(patientID, Name, Age, Address, Contact,Email,Selected_Doctor,Date,Time);
+    public Patient addPatient(int patientID, String Name, int Age, String Address, int Contact, String Email,String Selected_Doctor) {
+        ObjPatient = new Patient(patientID, Name, Age, Address, Contact,Email,Selected_Doctor);
         return ObjPatient;
     }
 
@@ -23,7 +25,14 @@ public class PatientController {
         return ObjPatientService.addPatient(ObjPatient);
     }
 
-    public boolean updatePatient(Patient patient){
-        return ObjPatientService.updatePatient(patient);
+    public boolean updatePatient(){
+        return ObjPatientService.updatePatient(ObjPatient);
+    }
+    public ResultSet getAllPatients(){
+        return ObjPatientService.getAllPatients();
+    }
+
+    public boolean deletePatient(int patientID){
+        return ObjPatientService.deletePatient(patientID);
     }
 }

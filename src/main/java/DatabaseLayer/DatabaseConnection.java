@@ -4,7 +4,7 @@ package DatabaseLayer;
 import java.sql.*;
 
 public class DatabaseConnection {
-    private final String URL = "jdbc:mysql://localhost:3306/clinic-management-system";
+    private final String URL = "jdbc:mysql://localhost:3306/clinic-management-system1";
     private final String username = "root";
     private final String password = "";
 
@@ -78,6 +78,16 @@ public class DatabaseConnection {
         return connection;
     }
 
+    public ResultSet executeSelectQuery(String sqlQ) {
+        try {
+            Statement st = connection.createStatement();
+            return st.executeQuery(sqlQ); // Returns the result set
+        } catch (SQLException ex) {
+            System.out.println("SQL Error: " + ex.getMessage());
+            return null;
+        }
+    }
+
     public void closeConnection() {
         try {
             if (connection != null && !connection.isClosed()) {
@@ -88,14 +98,13 @@ public class DatabaseConnection {
         }
     }
 
-    public boolean isValidUser(String query) {
+    public ResultSet ExecuteSQLResultSet(String query) {
         try {
             Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery(query);
-            return rs.next();
+            return statement.executeQuery(query);
         } catch (SQLException e) {
             System.out.println("SQL execution failed: " + e.getMessage());
-            return false;
+            return null;
         }
     }
 }

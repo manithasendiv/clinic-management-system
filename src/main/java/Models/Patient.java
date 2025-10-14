@@ -8,10 +8,8 @@ public class Patient {
     private int Contact;
     private String Email;
     private String Selected_Doctor;
-    private String Date;
-    private String Time;
 
-    public Patient(int patientID, String name, int age, String address, int contact, String email, String selected_Doctor, String date, String time) {
+    public Patient(int patientID, String name, int age, String address, int contact, String email, String selected_Doctor) {
         this.patientID = patientID;
         Name = name;
         Age = age;
@@ -19,8 +17,6 @@ public class Patient {
         Contact = contact;
         Email = email;
         Selected_Doctor = selected_Doctor;
-        Date = date;
-        Time = time;
     }
 
     public int getPatientID() {
@@ -49,13 +45,5 @@ public class Patient {
 
     public String getSelected_Doctor() {
         return Selected_Doctor;
-    }
-
-    public String getDate() {
-        return Date;
-    }
-
-    public String getTime() {
-        return Time;
     }
 }
